@@ -1,12 +1,12 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import AdminPanel from "./pages/AdminPanel";
+import Users from "./pages/Users";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import Loans from "./pages/Loans";
 import LoanDetails from "./pages/LoanDetails";
 import AddLoan from "./pages/AddLoan";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import AddCustomer from "./pages/AddCustomer";
@@ -19,7 +19,6 @@ function App() {
       <Routes>
         {/* PUBLIC */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         {/* PROTECTED */}
         <Route
@@ -118,6 +117,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AdminPanel />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Users />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

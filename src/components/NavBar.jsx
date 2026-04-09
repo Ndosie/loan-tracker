@@ -3,7 +3,7 @@ import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   return (
     <div className="bg-white shadow px-6 py-4 flex justify-between">
@@ -13,6 +13,12 @@ export default function Navbar() {
           <Link to="/">Dashboard</Link>
           <Link to="/customers">Customers</Link>
           <Link to="/loans">Loans</Link>
+          {profile?.role === "admin" && (
+            <>
+              <Link to="/admin">Approvals</Link>
+              <Link to="/admin/users">Users</Link>
+            </>
+          )}
         </div>
       )}
 
@@ -29,9 +35,6 @@ export default function Navbar() {
           <div className="space-x-3">
             <Link to="/login" className="text-blue-500">
               Login
-            </Link>
-            <Link to="/register" className="text-green-500">
-              Register
             </Link>
           </div>
         )}

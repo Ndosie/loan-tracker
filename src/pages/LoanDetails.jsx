@@ -28,7 +28,6 @@ export default function LoanDetails() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER + SUMMARY */}
       <div className="card">
         <h2 className="text-2xl font-bold mb-4">Loan Details</h2>
 
@@ -52,7 +51,6 @@ export default function LoanDetails() {
         </div>
       </div>
 
-      {/* PAYMENT ACTION */}
       <div className="card max-w-md">
         <h3 className="text-lg font-semibold mb-3">Record Payment</h3>
 
@@ -70,7 +68,6 @@ export default function LoanDetails() {
         </div>
       </div>
 
-      {/* PAYMENTS HISTORY */}
       <div className="card">
         <h3 className="text-lg font-semibold mb-4">Payments History</h3>
 
@@ -87,21 +84,21 @@ export default function LoanDetails() {
                   {new Date(p.payment_date).toLocaleDateString()}
                 </span>
 
-                <span className="font-semibold">{p.amount}</span>
+                <span className="font-semibold">
+                  {p.amount.toLocaleString()}
+                </span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* SCHEDULES */}
       <div className="card">
         <h3 className="text-lg font-semibold mb-4">Repayment Schedule</h3>
 
         <ScheduleTable schedules={loan.schedules} />
       </div>
 
-      {/* PENALTIES */}
       <div className="card">
         <h3 className="text-lg font-semibold mb-4">Penalties</h3>
 

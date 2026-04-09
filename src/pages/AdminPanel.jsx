@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import { processAction } from "../services/processAction";
+import { useAuth } from "../context/AuthContext";
 
 export default function AdminPanel() {
   const [actions, setActions] = useState([]);
+  const { profile, loading } = useAuth();
 
   useEffect(() => {
     loadActions();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (profile?.role !== "admin")
+    return <p>You are not authorized to access this page.</p>;
 
   const loadActions = async () => {
     const { data } = await supabase

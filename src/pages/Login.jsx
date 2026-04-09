@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { login } from "../services/auth.service";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -41,13 +40,6 @@ export default function Login() {
         <button className="btn btn-primary w-full" type="submit">
           Login
         </button>
-
-        <p className="mt-4 text-sm text-center">
-          No account?{" "}
-          <Link to="/register" className="text-blue-500">
-            Register
-          </Link>
-        </p>
       </form>
     </div>
   );

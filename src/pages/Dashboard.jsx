@@ -29,7 +29,7 @@ export default function Dashboard() {
 
         <div className="bg-white p-4 rounded shadow">
           <p>Total Amount</p>
-          <h2 className="text-xl font-bold">{totalAmount}</h2>
+          <h2 className="text-xl font-bold">{totalAmount.toLocaleString()}</h2>
         </div>
 
         <div className="bg-white p-4 rounded shadow">

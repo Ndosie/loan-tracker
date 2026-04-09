@@ -26,9 +26,8 @@ export default function Customers() {
   };
 
   return (
-    <div>
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-4">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Customers</h2>
 
         <Link to="/customers/new" className="btn btn-primary">
@@ -36,47 +35,55 @@ export default function Customers() {
         </Link>
       </div>
 
-      {/* TABLE */}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Nida</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Documents Link</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {customers.map((c) => (
-            <tr key={c.id}>
-              <td className="font-medium">{c.name}</td>
-              <td>{c.nida}</td>
-              <td>{c.phone}</td>
-              <td>{c.address}</td>
-              <td>
-                <a href={c.documents} target="_blank">
-                  Click
-                </a>
-              </td>
-              <td className="space-x-2">
-                <Link to={`/customers/edit/${c.id}`} className="text-blue-500">
-                  Edit
-                </Link>
-
-                <button
-                  onClick={() => handleDelete(c.id)}
-                  className="text-red-500"
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="bg-white shadow rounded-2xl p-4 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left border-b">
+              <th className="p-3">Name</th>
+              <th className="p-3">Nida</th>
+              <th className="p-3">Phone</th>
+              <th className="p-3">Address</th>
+              <th className="p-3">Documents</th>
+              <th className="p-3">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {customers.map((c) => (
+              <tr key={c.id} className="border-b hover:bg-gray-50">
+                <td className="p-3">{c.name}</td>
+                <td className="p-3">{c.nida}</td>
+                <td className="p-3">{c.phone}</td>
+                <td className="p-3">{c.address}</td>
+                <td className="p-3">
+                  <a
+                    href={c.documents}
+                    target="_blank"
+                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
+                  >
+                    View
+                  </a>
+                </td>
+                <td className="space-x-2">
+                  <Link
+                    to={`/customers/edit/${c.id}`}
+                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(c.id)}
+                    className="px-3 py-1 text-xs bg-red-500 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

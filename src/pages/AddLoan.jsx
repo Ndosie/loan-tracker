@@ -61,7 +61,6 @@ export default function AddLoan() {
           onChange={(e) => setForm({ ...form, upfront_amount: e.target.value })}
         />
 
-        {/* DURATION */}
         <input
           className="input mb-4"
           type="number"
@@ -70,7 +69,6 @@ export default function AddLoan() {
           onChange={(e) => setForm({ ...form, duration: e.target.value })}
         />
 
-        {/* ACTIONS */}
         <div className="flex gap-2">
           <button className="btn btn-primary">Create Loan</button>
 
