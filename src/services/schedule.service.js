@@ -3,22 +3,33 @@ import { supabase } from "./supabaseClient";
 export const generateSchedule = async ({
   loan_id,
   total_amount,
+  installment,
   duration,
   start_date,
 }) => {
-  const installment = total_amount / duration;
-
+  let remained = total_amount;
   let schedules = [];
 
   for (let i = 0; i < duration; i++) {
     const dueDate = new Date(start_date);
-    dueDate.setDate(dueDate.getDate() + (i + 1) * 7); // weekly
+    dueDate.setDate(dueDate.getDate() + (i + 1) * 7);
 
-    schedules.push({
-      loan_id,
-      due_date: dueDate,
-      amount_due: installment,
-    });
+    remained -= installment;
+
+    if (remained <= installment) {
+      schedules.push({
+        loan_id,
+        due_date: dueDate,
+        amount_due: remained,
+      });
+      break;
+    } else {
+      schedules.push({
+        loan_id,
+        due_date: dueDate,
+        amount_due: installment,
+      });
+    }
   }
 
   const { data, error } = await supabase

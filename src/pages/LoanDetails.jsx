@@ -34,19 +34,23 @@ export default function LoanDetails() {
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-gray-50 p-4 rounded-xl">
             <p className="text-sm text-gray-500">Total</p>
-            <p className="text-lg font-semibold">{loan.total_amount}</p>
+            <p className="text-lg font-semibold">
+              {loan.total_amount.toLocaleString()}
+            </p>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-xl">
             <p className="text-sm text-gray-500">Paid</p>
             <p className="text-lg font-semibold text-green-600">
-              {loan.totalPaid}
+              {loan.totalPaid.toLocaleString()}
             </p>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-xl">
             <p className="text-sm text-gray-500">Balance</p>
-            <p className="text-lg font-semibold text-red-600">{loan.balance}</p>
+            <p className="text-lg font-semibold text-red-600">
+              {loan.balance.toLocaleString()}
+            </p>
           </div>
         </div>
       </div>

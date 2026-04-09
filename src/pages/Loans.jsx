@@ -42,7 +42,8 @@ export default function Loans() {
             <tr className="text-left border-b">
               <th className="p-3">Customer</th>
               <th className="p-3">Amount</th>
-              <th className="p-3">Upfront Amount</th>
+              <th className="p-3">Upfront</th>
+              <th className="p-3">Installment</th>
               <th className="p-3">Duration</th>
               <th className="p-3">Status</th>
               <th className="p-3">Actions</th>
@@ -56,6 +57,7 @@ export default function Loans() {
                 <td className="p-3">{l.customers?.name}</td>
                 <td className="p-3">{l.amount.toLocaleString()}</td>
                 <td className="p-3">{l.upfront_amount.toLocaleString()}</td>
+                <td className="p-3">{l.installment_amount.toLocaleString()}</td>
                 <td>{l.duration} weeks</td>
 
                 <td className="p-3">

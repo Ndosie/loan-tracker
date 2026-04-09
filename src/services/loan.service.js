@@ -1,11 +1,11 @@
 import { supabase } from "./supabaseClient";
 
-export const createLoan = async ({ loan }) => {
+export const createLoan = async (loan) => {
   const { data, error } = await supabase.from("pending_actions").insert({
     action_type: "create",
-    entity_type: "customer",
+    entity_type: "loan",
     data: loan,
-  });
+  }); 
 
   if (error) throw error;
   return data;

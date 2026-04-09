@@ -43,7 +43,7 @@ export const processAction = async (action) => {
         .from("loans")
         .insert([
           {
-            ...data,
+            ...formData,
             status: "active",
             total_amount,
           },
@@ -55,6 +55,7 @@ export const processAction = async (action) => {
       await generateSchedule({
         loan_id: data.id,
         total_amount,
+        installment: formData.installment_amount,
         duration: formData.duration,
         start_date: new Date(),
       });

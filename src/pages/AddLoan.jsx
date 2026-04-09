@@ -8,6 +8,7 @@ export default function AddLoan() {
     customer_id: "",
     amount: "",
     upfront_amount: "",
+    installment_amount: "",
     duration: "",
   });
 
@@ -59,6 +60,16 @@ export default function AddLoan() {
           placeholder="Upfront amount"
           value={form.upfront_amount}
           onChange={(e) => setForm({ ...form, upfront_amount: e.target.value })}
+        />
+
+        <input
+          className="input mb-3"
+          type="number"
+          placeholder="Installment amount"
+          value={form.installment_amount}
+          onChange={(e) =>
+            setForm({ ...form, installment_amount: e.target.value })
+          }
         />
 
         <input
