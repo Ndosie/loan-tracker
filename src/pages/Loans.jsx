@@ -8,7 +8,7 @@ export async function loader() {
 
 export default function Loans() {
   const { loans } = useLoaderData();
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Delete this loan?");
@@ -54,7 +54,7 @@ export default function Loans() {
                 <td className="p-3">{l.amount.toLocaleString()}</td>
                 <td className="p-3">{l.upfront_amount.toLocaleString()}</td>
                 <td className="p-3">{l.installment_amount.toLocaleString()}</td>
-                <td>{l.duration} weeks</td>
+                <td className="p-3">{l.duration} weeks</td>
 
                 <td className="p-3">
                   <span
@@ -69,7 +69,6 @@ export default function Loans() {
                 </td>
 
                 <td className="space-x-2">
-
                   <button
                     onClick={() => handleDelete(l.id)}
                     className="px-3 py-1 text-xs bg-red-500 text-white rounded"

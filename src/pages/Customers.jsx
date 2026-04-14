@@ -8,7 +8,7 @@ export async function loader() {
 
 export default function Customers() {
   const { customers } = useLoaderData();
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(

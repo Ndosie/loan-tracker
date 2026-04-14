@@ -29,7 +29,7 @@ export default function AddLoan() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-xl content-center">
+    <div className="flex justify-center">
       <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Create Loan</h2>
         <select

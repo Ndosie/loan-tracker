@@ -22,7 +22,7 @@ export default function AddCustomer() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-xl">
+    <div className="flex justify-center">
       <Form className="card" method="post">
         <h2 className="text-xl font-bold mb-4">Add Customer</h2>
 

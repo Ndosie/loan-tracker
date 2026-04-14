@@ -17,7 +17,7 @@ export async function action({ request, params }) {
 }
 
 export default function EditCustomer() {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const { customer } = useLoaderData();
 
   const [form, setForm] = useState({
@@ -29,7 +29,7 @@ export default function EditCustomer() {
   });
 
   return (
-    <div className="max-w-xl">
+    <div className="flex justify-center">
       <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Edit Customer</h2>
 
