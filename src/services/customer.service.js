@@ -1,7 +1,6 @@
 import { supabase } from "./supabaseClient";
 
 export const createCustomer = async (customer) => {
-  console.log(customer);
   const { data, error } = await supabase.from("pending_actions").insert({
     action_type: "create",
     entity_type: "customer",

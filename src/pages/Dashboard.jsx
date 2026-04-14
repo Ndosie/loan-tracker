@@ -1,18 +1,7 @@
-import { useEffect, useState } from "react";
-import { getLoans } from "../services/loan.service";
+import { useLoaderData } from "react-router-dom";
 
 export default function Dashboard() {
-  const [loans, setLoans] = useState([]);
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const data = await getLoans();
-    setLoans(data);
-  };
-
+  const { loans } = useLoaderData();
   const totalLoans = loans.length;
   const totalAmount = loans.reduce((sum, l) => sum + l.total_amount, 0);
   const activeLoans = loans.filter((l) => l.status === "active").length;

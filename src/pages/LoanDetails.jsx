@@ -1,30 +1,34 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Form, redirect, useLoaderData } from "react-router-dom";
+import { useState } from "react";
 import { getLoanDetails } from "../services/loanDetails.service";
 import { addPayment } from "../services/payment.service";
 import ScheduleTable from "../components/ScheduleTable";
 
+export async function loader({ params }) {
+  const loan = await getLoanDetails(params.loanId);
+  return { loan };
+}
+
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  const loan = await getLoanDetails(params.loanId);
+  if (Number(data.amount !== loan.installment_amount)) {
+    alert(
+      `The amount should be the same as the installment amount ${loan.installment_amount}`,
+    );
+    return;
+  }
+  await addPayment({ loan_id: params.loanId, amount: Number(data.amount) });
+  alert("Payment has been added");
+  return redirect(".");
+}
+
 export default function LoanDetails() {
-  const { id } = useParams();
-  const [loan, setLoan] = useState(null);
-  const [amount, setAmount] = useState("");
-
-  const loadData = async () => {
-    const data = await getLoanDetails(id);
-    setLoan(data);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const handlePayment = async () => {
-    await addPayment({ loan_id: id, amount: Number(amount) });
-    setAmount("");
-    loadData();
-  };
-
-  if (!loan) return <p>Loading...</p>;
+  const { loan } = useLoaderData();
+  const [form, setForm] = useState({
+    amount: "",
+  });
 
   return (
     <div className="space-y-6">
@@ -58,18 +62,21 @@ export default function LoanDetails() {
       <div className="card max-w-md">
         <h3 className="text-lg font-semibold mb-3">Record Payment</h3>
 
-        <div className="flex gap-2">
-          <input
-            className="input flex-1"
-            placeholder="Enter amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+        <Form method="post">
+          <div className="flex gap-2">
+            <input
+              className="input flex-1"
+              name="amount"
+              placeholder="Enter amount"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: e.target.value })}
+            />
 
-          <button onClick={handlePayment} className="btn btn-primary">
-            Pay
-          </button>
-        </div>
+            <button type="submit" className="btn btn-primary">
+              Pay
+            </button>
+          </div>
+        </Form>
       </div>
 
       <div className="card">

@@ -1,10 +1,8 @@
 import { supabase } from "./supabaseClient";
 
 export const addPayment = async ({ loan_id, amount }) => {
-  // Save payment
   await supabase.from("payments").insert([{ loan_id, amount }]);
 
-  // Get next unpaid schedule
   const { data: schedules } = await supabase
     .from("loan_schedules")
     .select("*")

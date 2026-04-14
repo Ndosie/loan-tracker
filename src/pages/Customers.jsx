@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
 import { deleteCustomer, getCustomers } from "../services/customer.service";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+
+export async function loader() {
+  const customers = await getCustomers();
+  return { customers };
+}
 
 export default function Customers() {
-  const [customers, setCustomers] = useState([]);
-
-  useEffect(() => {
-    loadCustomers();
-  }, []);
-
-  const loadCustomers = async () => {
-    const data = await getCustomers();
-    setCustomers(data);
-  };
+  const { customers } = useLoaderData();
+  const { navigate } = useNavigate();
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -22,7 +18,7 @@ export default function Customers() {
     if (!confirmDelete) return;
 
     await deleteCustomer(id);
-    loadCustomers();
+    navigate("/customers");
   };
 
   return (
@@ -30,7 +26,7 @@ export default function Customers() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Customers</h2>
 
-        <Link to="/customers/new" className="btn btn-primary">
+        <Link to="new" className="btn btn-primary">
           + Add Customer
         </Link>
       </div>
@@ -66,12 +62,11 @@ export default function Customers() {
                 </td>
                 <td className="space-x-2">
                   <Link
-                    to={`/customers/edit/${c.id}`}
+                    to={`/customers/${c.id}/edit`}
                     className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
                   >
                     Edit
                   </Link>
-
                   <button
                     onClick={() => handleDelete(c.id)}
                     className="px-3 py-1 text-xs bg-red-500 text-white rounded"

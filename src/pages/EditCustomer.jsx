@@ -1,47 +1,48 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Form, useNavigate, redirect, useLoaderData } from "react-router-dom";
 import { updateCustomer, getCustomers } from "../services/customer.service";
 
+export async function loader({ params }) {
+  const customers = await getCustomers();
+  const customer = customers.find((c) => c.id === params.customerId);
+  return { customer };
+}
+
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  await updateCustomer(params.customerId, updates);
+  alert("Request has been sent to administrator for approval.");
+  return redirect("/customers");
+}
+
 export default function EditCustomer() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { navigate } = useNavigate();
+  const { customer } = useLoaderData();
 
   const [form, setForm] = useState({
-    name: "",
-    nida: "",
-    phone: "",
-    address: "",
-    documents: "",
+    name: customer.name,
+    nida: customer.nida,
+    phone: customer.phone,
+    address: customer.address,
+    documents: customer.documents,
   });
-
-  useEffect(() => {
-    const loadCustomer = async () => {
-      const customers = await getCustomers();
-      const customer = customers.find((c) => c.id === id);
-      setForm(customer);
-    };
-    loadCustomer();
-  }, [id]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await updateCustomer(id, form);
-    navigate("/customers");
-  };
 
   return (
     <div className="max-w-xl">
-      <form onSubmit={handleSubmit} className="card">
+      <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Edit Customer</h2>
 
         <input
           className="input mb-3"
+          name="name"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
         <input
           className="input mb-3"
+          name="nida"
           placeholder="NIDA"
           value={form.nida}
           onChange={(e) => setForm({ ...form, nida: e.target.value })}
@@ -49,25 +50,30 @@ export default function EditCustomer() {
 
         <input
           className="input mb-3"
+          name="phone"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
 
         <input
           className="input mb-4"
+          name="address"
           value={form.address}
           onChange={(e) => setForm({ ...form, address: e.target.value })}
         />
 
         <input
           className="input mb-4"
+          name="documents"
           placeholder="Documents link"
           value={form.documents}
           onChange={(e) => setForm({ ...form, documents: e.target.value })}
         />
 
         <div className="flex gap-2">
-          <button className="btn btn-primary">Update</button>
+          <button type="submit" className="btn btn-primary">
+            Update
+          </button>
 
           <button
             type="button"
@@ -77,7 +83,7 @@ export default function EditCustomer() {
             Cancel
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

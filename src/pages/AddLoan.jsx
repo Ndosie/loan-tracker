@@ -1,7 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createLoan } from "../services/loan.service";
 import { getCustomers } from "../services/customer.service";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate, redirect, useLoaderData } from "react-router-dom";
+
+export async function loader() {
+  const customers = await getCustomers();
+  return { customers };
+}
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  await createLoan(data);
+  alert("Request has been sent to administrator for approval.");
+  return redirect("/loans");
+}
 
 export default function AddLoan() {
   const [form, setForm] = useState({
@@ -12,29 +25,16 @@ export default function AddLoan() {
     duration: "",
   });
 
-  const [customers, setCustomers] = useState([]);
+  const { customers } = useLoaderData();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadCustomers = async () => {
-      const data = await getCustomers();
-      setCustomers(data);
-    };
-    loadCustomers();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await createLoan(form);
-    navigate("/loans");
-  };
 
   return (
     <div className="max-w-xl content-center">
-      <form onSubmit={handleSubmit} className="card">
+      <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Create Loan</h2>
         <select
           className="input mb-3"
+          name="customer_id"
           value={form.customer_id}
           onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
         >
@@ -48,6 +48,7 @@ export default function AddLoan() {
 
         <input
           className="input mb-3"
+          name="amount"
           type="number"
           placeholder="Loan Amount"
           value={form.amount}
@@ -56,6 +57,7 @@ export default function AddLoan() {
 
         <input
           className="input mb-3"
+          name="upfront_amount"
           type="number"
           placeholder="Upfront amount"
           value={form.upfront_amount}
@@ -64,6 +66,7 @@ export default function AddLoan() {
 
         <input
           className="input mb-3"
+          name="installment_amount"
           type="number"
           placeholder="Installment amount"
           value={form.installment_amount}
@@ -74,6 +77,7 @@ export default function AddLoan() {
 
         <input
           className="input mb-4"
+          name="duration"
           type="number"
           placeholder="Duration (weeks)"
           value={form.duration}
@@ -81,7 +85,9 @@ export default function AddLoan() {
         />
 
         <div className="flex gap-2">
-          <button className="btn btn-primary">Create Loan</button>
+          <button type="submit" className="btn btn-primary">
+            Create Loan
+          </button>
 
           <button
             type="button"
@@ -91,7 +97,7 @@ export default function AddLoan() {
             Cancel
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

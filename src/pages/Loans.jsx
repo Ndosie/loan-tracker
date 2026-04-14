@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
 import { deleteLoan, getLoans } from "../services/loan.service";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+
+export async function loader() {
+  const loans = await getLoans();
+  return { loans };
+}
 
 export default function Loans() {
-  const [loans, setLoans] = useState([]);
-
-  const loadLoans = async () => {
-    const data = await getLoans();
-    setLoans(data);
-  };
-
-  useEffect(() => {
-    loadLoans();
-  }, []);
+  const { loans } = useLoaderData();
+  const { navigate } = useNavigate();
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Delete this loan?");
@@ -20,7 +16,7 @@ export default function Loans() {
     if (!confirmDelete) return;
 
     await deleteLoan(id);
-    loadLoans();
+    navigate("/loans");
   };
 
   return (
@@ -73,12 +69,6 @@ export default function Loans() {
                 </td>
 
                 <td className="space-x-2">
-                  <Link
-                    to={`/loans/edit/${l.id}`}
-                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
-                  >
-                    Edit
-                  </Link>
 
                   <button
                     onClick={() => handleDelete(l.id)}
