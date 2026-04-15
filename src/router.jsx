@@ -1,9 +1,15 @@
-import { createBrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import AdminPanel from "./pages/AdminPanel";
 import Users from "./pages/Users";
 import Dashboard from "./pages/Dashboard";
-import Customers, { loader as customersLoader } from "./pages/Customers";
-import Loans, { loader as loansLoader } from "./pages/Loans";
+import Customers, {
+  loader as customersLoader,
+  action as deleteCustomerAction,
+} from "./pages/Customers";
+import Loans, {
+  loader as loansLoader,
+  action as deleteLoanAction,
+} from "./pages/Loans";
 import LoanDetails, {
   loader as loanDetailsLoader,
   action as loanDetailsAction,
@@ -37,50 +43,63 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
-        element: <Dashboard />,
-        loader: loansLoader,
-      },
-      {
-        path: "customers",
-        element: <Customers />,
-        loader: customersLoader,
-      },
-      {
-        path: "customers/new",
-        element: <AddCustomer />,
-        action: addCustomerAction,
-      },
-      {
-        path: "customers/:customerId/edit",
-        element: <EditCustomer />,
-        loader: editCustomerLoader,
-        action: editCustomerAction,
-      },
-      {
-        path: "loans",
-        element: <Loans />,
-        loader: loansLoader,
-      },
-      {
-        path: "loans/new",
-        element: <AddLoan />,
-        loader: addLoadLoader,
-        action: addLoanAction,
-      },
-      {
-        path: "loans/:loanId",
-        element: <LoanDetails />,
-        loader: loanDetailsLoader,
-        action: loanDetailsAction,
-      },
-      {
-        path: "admin",
-        element: <AdminPanel />,
-      },
-      {
-        path: "admin/users",
-        element: <Users />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+            loader: loansLoader,
+          },
+          {
+            path: "customers",
+            element: <Customers />,
+            loader: customersLoader,
+          },
+          {
+            path: "customers/new",
+            element: <AddCustomer />,
+            action: addCustomerAction,
+          },
+          {
+            path: "customers/:customerId/edit",
+            element: <EditCustomer />,
+            loader: editCustomerLoader,
+            action: editCustomerAction,
+          },
+          {
+            path: "customers/delete",
+            action: deleteCustomerAction,
+          },
+          {
+            path: "loans",
+            element: <Loans />,
+            loader: loansLoader,
+          },
+          {
+            path: "loans/new",
+            element: <AddLoan />,
+            loader: addLoadLoader,
+            action: addLoanAction,
+          },
+          {
+            path: "loans/:loanId",
+            element: <LoanDetails />,
+            loader: loanDetailsLoader,
+            action: loanDetailsAction,
+          },
+          {
+            path: "loans/delete",
+            action: deleteLoanAction,
+          },
+          {
+            path: "admin",
+            element: <AdminPanel />,
+          },
+          {
+            path: "admin/users",
+            element: <Users />,
+          },
+        ],
       },
     ],
   },

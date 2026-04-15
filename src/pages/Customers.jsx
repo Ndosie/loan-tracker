@@ -1,25 +1,21 @@
 import { deleteCustomer, getCustomers } from "../services/customer.service";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Form, Link, useLoaderData, redirect } from "react-router-dom";
 
 export async function loader() {
   const customers = await getCustomers();
   return { customers };
 }
 
+export async function action({ request }) {
+  const formData = await request.formData();
+  await deleteCustomer(formData.get("customerId"));
+  alert("The request has been sent for approval");
+  return redirect("/customers");
+}
+
+
 export default function Customers() {
   const { customers } = useLoaderData();
-  const navigate = useNavigate();
-
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this customer?",
-    );
-
-    if (!confirmDelete) return;
-
-    await deleteCustomer(id);
-    navigate("/customers");
-  };
 
   return (
     <div className="p-6">
@@ -67,12 +63,21 @@ export default function Customers() {
                   >
                     Edit
                   </Link>
-                  <button
-                    onClick={() => handleDelete(c.id)}
-                    className="px-3 py-1 text-xs bg-red-500 text-white rounded"
-                  >
-                    Delete
-                  </button>
+                  <Form className="inline" method="post" action="delete" onSubmit={(e) => {
+                     if (
+                       !confirm("Please confirm you want to delete this customer.")
+                     ) {
+                       e.preventDefault();
+                     }
+                  }}>
+                    <input type="hidden" name="customerId" value={c.id} />
+                    <button
+                      type="submit"
+                      className="px-3 py-1 text-xs bg-red-500 text-white rounded"
+                    >
+                      Delete
+                    </button>
+                  </Form>
                 </td>
               </tr>
             ))}

@@ -1,23 +1,20 @@
 import { deleteLoan, getLoans } from "../services/loan.service";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Form, Link, useLoaderData, redirect } from "react-router-dom";
 
 export async function loader() {
   const loans = await getLoans();
   return { loans };
 }
 
+export async function action({ request }) {
+  const formData = await request.formData();
+  await deleteLoan(formData.get("loanId"));
+  alert("The request has been sent for approval");
+  return redirect("/loans");
+}
+
 export default function Loans() {
   const { loans } = useLoaderData();
-  const navigate = useNavigate();
-
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Delete this loan?");
-
-    if (!confirmDelete) return;
-
-    await deleteLoan(id);
-    navigate("/loans");
-  };
 
   return (
     <div className="p-6">
@@ -69,12 +66,25 @@ export default function Loans() {
                 </td>
 
                 <td className="space-x-2">
-                  <button
-                    onClick={() => handleDelete(l.id)}
-                    className="px-3 py-1 text-xs bg-red-500 text-white rounded"
+                  <Form
+                    method="post"
+                    action="delete"
+                    onSubmit={(e) => {
+                      if (
+                        !confirm("Please confirm you want to delete this loan.")
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                   >
-                    Delete
-                  </button>
+                    <input type="hidden" name="loadId" value={l.id} />
+                    <button
+                      type="submit"
+                      className="px-3 py-1 text-xs bg-red-500 text-white rounded"
+                    >
+                      Delete
+                    </button>
+                  </Form>
                 </td>
 
                 <td>

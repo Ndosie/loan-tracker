@@ -6,6 +6,13 @@ import ScheduleTable from "../components/ScheduleTable";
 
 export async function loader({ params }) {
   const loan = await getLoanDetails(params.loanId);
+  console.log(`Loan: ${loan}`);
+  if (!loan) {
+    throw new Response("", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
   return { loan };
 }
 
