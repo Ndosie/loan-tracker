@@ -1,10 +1,16 @@
 import { useLoaderData } from "react-router-dom";
+import { checkOverdueLoans } from "../utils/checkOverdueLoans";
+import { useEffect } from "react";
 
 export default function Dashboard() {
   const { loans } = useLoaderData();
   const totalLoans = loans.length;
   const totalAmount = loans.reduce((sum, l) => sum + l.total_amount, 0);
   const activeLoans = loans.filter((l) => l.status === "active").length;
+
+  useEffect(() => {
+    checkOverdueLoans();
+  }, []);
 
   return (
     <div>

@@ -37,6 +37,18 @@ export const generateSchedule = async ({
     .insert(schedules);
 
   if (error) throw error;
+  return data;
+};
 
+export const getOverdueLoans = async () => {
+  const today = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("loan_schedules")
+    .select("id, loan_id, due_date")
+    .lt("due_date", today)
+    .eq("status", "pending");
+
+  if (error) throw error;
   return data;
 };

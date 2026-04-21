@@ -1,9 +1,25 @@
 import { Link } from "react-router-dom";
 import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
+import { Bell } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getNotificationsById } from "../services/notification.service";
 
 export default function Navbar() {
   const { user, profile } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchNotifations = async () => {
+      const newNotifications = await getNotificationsById(user.id);
+
+      setNotifications(newNotifications);
+    };
+    fetchNotifations();
+  }, [user]);
 
   const linkClass = (path) =>
     `px-3 py-1 rounded-lg transition ${
@@ -21,6 +37,7 @@ export default function Navbar() {
           </h1>
           <p className="text-xs text-gray-500">Loan Tracker System</p>
         </div>
+
         {user && (
           <div className="flex items-center gap-2 font-medium">
             <Link to="/" className={linkClass("/")}>
@@ -49,9 +66,54 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
       <div className="flex items-center gap-4">
         {user ? (
           <>
+            <div className="relative">
+              <button
+                onClick={() => setOpen(!open)}
+                className="relative p-2 rounded-full hover:bg-gray-100 transition"
+              >
+                <Bell size={20} />
+
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+
+              {open && (
+                <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-xl border z-50">
+                  <div className="p-3 border-b font-semibold">
+                    Notifications
+                  </div>
+
+                  {notifications.length === 0 ? (
+                    <p className="p-3 text-sm text-gray-500">
+                      No notifications
+                    </p>
+                  ) : (
+                    <ul className="max-h-60 overflow-y-auto rounded-xl">
+                      {notifications.map((n) => (
+                        <li
+                          key={n.id}
+                          className={`p-3 text-sm  text-gray-500 cursor-pointer hover:bg-gray-50 ${
+                            n.is_read
+                              ? "text-gray-500"
+                              : "font-semibold bg-gray-50"
+                          }`}
+                        >
+                          {n.message}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="text-right">
               <p className="text-sm font-medium">
                 {profile?.full_name || profile?.email}

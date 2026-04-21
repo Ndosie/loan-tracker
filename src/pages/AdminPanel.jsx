@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import { processAction } from "../services/processAction";
 import { useAuth } from "../context/AuthContext";
+import { createNotification, getNotificationByPendingId } from "../services/notification.service";
+import { getUserById } from "../services/profile.service";
 
 export default function AdminPanel() {
   const [pendingActions, setPendingActions] = useState([]);
   const [processedActions, setProcessedActions] = useState([]);
-  const { profile, loading } = useAuth();
+  const { profile } = useAuth();
 
   const loadActions = async () => {
     const { data } = await supabase
@@ -22,8 +24,6 @@ export default function AdminPanel() {
     loadActions();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-
   if (profile?.role !== "admin")
     return <p>You are not authorized to access this page.</p>;
 
@@ -35,14 +35,34 @@ export default function AdminPanel() {
       .update({ status: "approved" })
       .eq("id", action.id);
 
+    const notification = await getNotificationByPendingId(action.id);
+    const user = await getUserById(action.created_by);
+
+    await createNotification([user], {
+      title: "Approved",
+      message: `${notification.message} approved`,
+      type: "approval_result",
+      reference_id: notification.reference_id,
+    });
+
     loadActions();
   };
 
-  const reject = async (id) => {
+  const reject = async (action) => {
     await supabase
       .from("pending_actions")
       .update({ status: "rejected" })
-      .eq("id", id);
+      .eq("id", action.id);
+
+    const notification = await getNotificationByPendingId(action.id);
+    const user = await getUserById(action.created_by);
+
+    await createNotification([user], {
+      title: "Rejected",
+      message: `${notification.message} rejected`,
+      type: "approval_result",
+      reference_id: notification.reference_id,
+    });
 
     loadActions();
   };
@@ -67,10 +87,7 @@ export default function AdminPanel() {
                 Approve
               </button>
 
-              <button
-                onClick={() => reject(a.id)}
-                className="btn btn-secondary"
-              >
+              <button onClick={() => reject(a)} className="btn btn-secondary">
                 Reject
               </button>
             </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { createLoan } from "../services/loan.service";
 import { getCustomers } from "../services/customer.service";
 import { Form, useNavigate, redirect, useLoaderData } from "react-router-dom";
@@ -11,7 +12,7 @@ export async function loader() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  await createLoan(data);
+  await createLoan(data, data.user_id);
   alert("Request has been sent to administrator for approval.");
   return redirect("/loans");
 }
@@ -27,11 +28,14 @@ export default function AddLoan() {
 
   const { customers } = useLoaderData();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <div className="flex justify-center">
       <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Create Loan</h2>
+        <input type="hidden" name="user_id" value={user.id} />
+
         <select
           className="input mb-3"
           name="customer_id"

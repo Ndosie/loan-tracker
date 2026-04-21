@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { Form, useNavigate, redirect, useLoaderData } from "react-router-dom";
 import { updateCustomer, getCustomers } from "../services/customer.service";
 
@@ -11,7 +12,7 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  await updateCustomer(params.customerId, updates);
+  await updateCustomer(params.customerId, updates, updates.user_id);
   alert("Request has been sent to administrator for approval.");
   return redirect("/customers");
 }
@@ -27,12 +28,14 @@ export default function EditCustomer() {
     address: customer.address,
     documents: customer.documents,
   });
+  const { user } = useAuth();
 
   return (
     <div className="flex justify-center">
       <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Edit Customer</h2>
 
+        <input type="hidden" name="user_id" value={user.id} />
         <input
           className="input mb-3"
           name="name"

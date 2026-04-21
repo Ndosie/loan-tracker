@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { createCustomer } from "../services/customer.service";
 import { Form, redirect, useNavigate } from "react-router-dom";
 
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  await createCustomer(data);
+  await createCustomer(data, data.user_id);
   alert("Request has been sent to administrator for approval.");
   return redirect("/customers");
 }
@@ -19,12 +20,16 @@ export default function AddCustomer() {
     documents: "",
   });
 
+  const { user } = useAuth();
+
   const navigate = useNavigate();
 
   return (
     <div className="flex justify-center">
       <Form className="card" method="post">
         <h2 className="text-xl font-bold mb-4">Add Customer</h2>
+
+        <input type="hidden" name="user_id" value={user.id} />
 
         <input
           className="input mb-3"

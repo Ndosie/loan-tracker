@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import { deleteLoan, getLoans } from "../services/loan.service";
 import { Form, Link, useLoaderData, redirect } from "react-router-dom";
 
@@ -8,13 +9,14 @@ export async function loader() {
 
 export async function action({ request }) {
   const formData = await request.formData();
-  await deleteLoan(formData.get("loanId"));
+  await deleteLoan(formData.get("loan_id"), formData.get("user_id"));
   alert("The request has been sent for approval");
   return redirect("/loans");
 }
 
 export default function Loans() {
   const { loans } = useLoaderData();
+  const { user } = useAuth();
 
   return (
     <div className="p-6">
@@ -77,7 +79,8 @@ export default function Loans() {
                       }
                     }}
                   >
-                    <input type="hidden" name="loadId" value={l.id} />
+                    <input type="hidden" name="loan_id" value={l.id} />
+                    <input type="hidden" name="user_id" value={user.id} />
                     <button
                       type="submit"
                       className="px-3 py-1 text-xs bg-red-500 text-white rounded"

@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import { deleteCustomer, getCustomers } from "../services/customer.service";
 import { Form, Link, useLoaderData, redirect } from "react-router-dom";
 
@@ -8,14 +9,14 @@ export async function loader() {
 
 export async function action({ request }) {
   const formData = await request.formData();
-  await deleteCustomer(formData.get("customerId"));
+  await deleteCustomer(formData.get("customer_id"), formData.get("user_id"));
   alert("The request has been sent for approval");
   return redirect("/customers");
 }
 
-
 export default function Customers() {
   const { customers } = useLoaderData();
+  const { user } = useAuth();
 
   return (
     <div className="p-6">
@@ -63,14 +64,22 @@ export default function Customers() {
                   >
                     Edit
                   </Link>
-                  <Form className="inline" method="post" action="delete" onSubmit={(e) => {
-                     if (
-                       !confirm("Please confirm you want to delete this customer.")
-                     ) {
-                       e.preventDefault();
-                     }
-                  }}>
-                    <input type="hidden" name="customerId" value={c.id} />
+                  <Form
+                    className="inline"
+                    method="post"
+                    action="delete"
+                    onSubmit={(e) => {
+                      if (
+                        !confirm(
+                          "Please confirm you want to delete this customer.",
+                        )
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
+                    <input type="hidden" name="customer_id" value={c.id} />
+                    <input type="hidden" name="user_id" value={user.id} />
                     <button
                       type="submit"
                       className="px-3 py-1 text-xs bg-red-500 text-white rounded"
