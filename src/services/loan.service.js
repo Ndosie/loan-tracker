@@ -2,7 +2,7 @@ import { supabase } from "./supabaseClient";
 import { createNotification } from "./notification.service";
 import { getUsersByRole } from "./profile.service";
 
-const admins = await getUsersByRole("admins");
+const admins = await getUsersByRole("admin");
 
 export const createLoan = async (loan, user_id) => {
   const { data, error } = await supabase
@@ -78,7 +78,7 @@ export const deleteLoan = async (id, user_id) => {
 
   await createNotification(admins, {
     title: "Approval needed",
-    message: "Deleting customer request",
+    message: "Deleting loan request",
     type: "approval_request",
     reference_id: data.id,
   });

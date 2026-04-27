@@ -2,7 +2,7 @@ import { supabase } from "./supabaseClient";
 import { createNotification } from "./notification.service";
 import { getUsersByRole } from "./profile.service";
 
-const admins = await getUsersByRole("admins");
+const admins = await getUsersByRole("admin");
 
 export const createCustomer = async (customer, user_id) => {
   const { data, error } = await supabase

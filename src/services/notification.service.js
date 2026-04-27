@@ -17,11 +17,19 @@ export const createNotification = async (users, request) => {
   return data;
 };
 
-export const getNotificationsById = async (id) => {
+export const getNotifications = async () => {
+  const { data, error } = await supabase.from("notifications").select("*");
+
+  if (error) throw error;
+  return data;
+};
+
+export const getNotificationsByUserId = async (id) => {
   const { data, error } = await supabase
     .from("notifications")
     .select("*")
     .eq("user_id", id)
+    .eq("is_read", false)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -37,6 +45,15 @@ export const getNotificationByPendingId = async (id) => {
 
   if (error) throw error;
   return data;
+};
+
+export const updateNotification = async (id, data) => {
+  const { error } = await supabase
+    .from("notifications")
+    .update(data)
+    .eq("id", id);
+
+  if (error) throw error;
 };
 
 export const deleteNotification = async (id) => {

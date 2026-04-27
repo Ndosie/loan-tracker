@@ -31,64 +31,93 @@ export default function AddLoan() {
   const { user } = useAuth();
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center">
       <Form method="post" className="card">
         <h2 className="text-xl font-bold mb-4">Create Loan</h2>
         <input type="hidden" name="user_id" value={user.id} />
 
-        <select
-          className="input mb-3"
-          name="customer_id"
-          value={form.customer_id}
-          onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
-        >
-          <option value="">Select Customer</option>
-          {customers.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">Customer</label>
+          <select
+            className="input"
+            name="customer_id"
+            value={form.customer_id}
+            onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
+          >
+            <option value="">Select Customer</option>
+            {customers.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          className="input mb-3"
-          name="amount"
-          type="number"
-          placeholder="Loan Amount"
-          value={form.amount}
-          onChange={(e) => setForm({ ...form, amount: e.target.value })}
-        />
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">
+            Loan Amount
+          </label>
+          <input
+            type="number"
+            name="amount"
+            value={form.amount}
+            onChange={(e) => setForm({ ...form, amount: e.target.value })}
+            className="input"
+          />
+        </div>
 
-        <input
-          className="input mb-3"
-          name="upfront_amount"
-          type="number"
-          placeholder="Upfront amount"
-          value={form.upfront_amount}
-          onChange={(e) => setForm({ ...form, upfront_amount: e.target.value })}
-        />
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">
+            Upfront amount
+          </label>
+          <input
+            className="input"
+            name="upfront_amount"
+            type="number"
+            value={form.upfront_amount}
+            onChange={(e) =>
+              setForm({ ...form, upfront_amount: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">
+            Installment amount
+          </label>
+          <input
+            className="input"
+            name="installment_amount"
+            type="number"
+            value={form.installment_amount}
+            onChange={(e) =>
+              setForm({ ...form, installment_amount: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">
+            Duration (weeks)
+          </label>
+          <input
+            className="input"
+            name="duration"
+            type="number"
+            value={form.duration}
+            onChange={(e) => setForm({ ...form, duration: e.target.value })}
+          />
+        </div>
+        <div className="mb-3 w-96">
+          <label className="block text-sm text-gray-600 mb-1">Start Date</label>
+          <input
+            className="input"
+            name="start_date"
+            type="date"
+            value={form.start_date}
+            onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+          />
+        </div>
 
-        <input
-          className="input mb-3"
-          name="installment_amount"
-          type="number"
-          placeholder="Installment amount"
-          value={form.installment_amount}
-          onChange={(e) =>
-            setForm({ ...form, installment_amount: e.target.value })
-          }
-        />
-
-        <input
-          className="input mb-4"
-          name="duration"
-          type="number"
-          placeholder="Duration (weeks)"
-          value={form.duration}
-          onChange={(e) => setForm({ ...form, duration: e.target.value })}
-        />
-
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center">
           <button type="submit" className="btn btn-primary">
             Create Loan
           </button>

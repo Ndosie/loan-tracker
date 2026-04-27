@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
-import { processAction } from "../services/processAction";
+import { processAction } from "../services/processAction.service";
 import { useAuth } from "../context/AuthContext";
-import { createNotification, getNotificationByPendingId } from "../services/notification.service";
+import {
+  createNotification,
+  getNotificationByPendingId,
+} from "../services/notification.service";
 import { getUserById } from "../services/profile.service";
 
 export default function AdminPanel() {
@@ -42,6 +45,7 @@ export default function AdminPanel() {
       title: "Approved",
       message: `${notification.message} approved`,
       type: "approval_result",
+      reference_table: notification.reference_table,
       reference_id: notification.reference_id,
     });
 
@@ -61,6 +65,7 @@ export default function AdminPanel() {
       title: "Rejected",
       message: `${notification.message} rejected`,
       type: "approval_result",
+      reference_table: notification.reference_table,
       reference_id: notification.reference_id,
     });
 

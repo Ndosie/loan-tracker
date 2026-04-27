@@ -45,9 +45,9 @@ export const getOverdueLoans = async () => {
 
   const { data, error } = await supabase
     .from("loan_schedules")
-    .select("id, loan_id, due_date")
+    .select("*, loans(*)")
     .lt("due_date", today)
-    .eq("status", "pending");
+    .match({ status: "pending", notified: false });
 
   if (error) throw error;
   return data;

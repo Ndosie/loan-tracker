@@ -30,79 +30,86 @@ export default function Loans() {
           + Add Loan
         </Link>
       </div>
-
-      <div className="bg-white shadow rounded-2xl p-4 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left border-b">
-              <th className="p-3">Customer</th>
-              <th className="p-3">Amount</th>
-              <th className="p-3">Upfront</th>
-              <th className="p-3">Installment</th>
-              <th className="p-3">Duration</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-              <th className="p-3">View</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {loans.map((l) => (
-              <tr key={l.id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{l.customers?.name}</td>
-                <td className="p-3">{l.amount.toLocaleString()}</td>
-                <td className="p-3">{l.upfront_amount.toLocaleString()}</td>
-                <td className="p-3">{l.installment_amount.toLocaleString()}</td>
-                <td className="p-3">{l.duration} weeks</td>
-
-                <td className="p-3">
-                  <span
-                    className={
-                      l.status === "completed"
-                        ? "text-green-600 font-medium"
-                        : "text-yellow-600 font-medium"
-                    }
-                  >
-                    {l.status}
-                  </span>
-                </td>
-
-                <td className="space-x-2">
-                  <Form
-                    method="post"
-                    action="delete"
-                    onSubmit={(e) => {
-                      if (
-                        !confirm("Please confirm you want to delete this loan.")
-                      ) {
-                        e.preventDefault();
-                      }
-                    }}
-                  >
-                    <input type="hidden" name="loan_id" value={l.id} />
-                    <input type="hidden" name="user_id" value={user.id} />
-                    <button
-                      type="submit"
-                      className="px-3 py-1 text-xs bg-red-500 text-white rounded"
-                    >
-                      Delete
-                    </button>
-                  </Form>
-                </td>
-
-                <td>
-                  <Link
-                    to={`/loans/${l.id}`}
-                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
-                  >
-                    View
-                  </Link>
-                </td>
+      {loans.length === 0 ? (
+        <p className="p-3 text-sm text-gray-500 text-center">No loans</p>
+      ) : (
+        <div className="bg-white shadow rounded-2xl p-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left border-b">
+                <th className="p-3">Customer</th>
+                <th className="p-3">Amount</th>
+                <th className="p-3">Upfront</th>
+                <th className="p-3">Installment</th>
+                <th className="p-3">Duration</th>
+                <th className="p-3">Status</th>
+                <th className="p-3">Actions</th>
+                <th className="p-3">View</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {loans.map((l) => (
+                <tr key={l.id} className="border-b hover:bg-gray-50">
+                  <td className="p-3">{l.customers?.name}</td>
+                  <td className="p-3">{l.amount.toLocaleString()}</td>
+                  <td className="p-3">{l.upfront_amount.toLocaleString()}</td>
+                  <td className="p-3">
+                    {l.installment_amount.toLocaleString()}
+                  </td>
+                  <td className="p-3">{l.duration} weeks</td>
+
+                  <td className="p-3">
+                    <span
+                      className={
+                        l.status === "completed"
+                          ? "text-green-600 font-medium"
+                          : "text-yellow-600 font-medium"
+                      }
+                    >
+                      {l.status}
+                    </span>
+                  </td>
+
+                  <td className="space-x-2">
+                    <Form
+                      method="post"
+                      action="delete"
+                      onSubmit={(e) => {
+                        if (
+                          !confirm(
+                            "Please confirm you want to delete this loan.",
+                          )
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      <input type="hidden" name="loan_id" value={l.id} />
+                      <input type="hidden" name="user_id" value={user.id} />
+                      <button
+                        type="submit"
+                        className="px-3 py-1 text-xs bg-red-500 text-white rounded"
+                      >
+                        Delete
+                      </button>
+                    </Form>
+                  </td>
+
+                  <td>
+                    <Link
+                      to={`/loans/${l.id}`}
+                      className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

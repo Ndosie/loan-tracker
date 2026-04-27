@@ -35,15 +35,15 @@ export const processAction = async (action) => {
 
   if (entity_type === "loan") {
     if (action_type === "create") {
-      const total_amount = calculateTotalLoan(
-        formData.amount,
-        formData.upfront_amount,
-      );
+      console.log(formData);
+      // eslint-disable-next-line no-unused-vars
+      const { user_id, ...loan } = formData;
+      const total_amount = calculateTotalLoan(loan.amount, loan.upfront_amount);
       const { data, error } = await supabase
         .from("loans")
         .insert([
           {
-            ...formData,
+            ...loan,
             status: "active",
             total_amount,
           },
@@ -57,7 +57,7 @@ export const processAction = async (action) => {
         total_amount,
         installment: formData.installment_amount,
         duration: formData.duration,
-        start_date: new Date(),
+        start_date: data.start_date,
       });
       return data[0];
     }
@@ -96,6 +96,15 @@ export const processAction = async (action) => {
       if (loanError) throw loanError;
     }
   }
+};
 
-  
+export const getActionById = async (id) => {
+  const { data, error } = await supabase
+    .from("pending_actions")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+  return data;
 };

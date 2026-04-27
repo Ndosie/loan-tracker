@@ -1,25 +1,73 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
 import { Bell } from "lucide-react";
-import { useState, useEffect } from "react";
-import { getNotificationsById } from "../services/notification.service";
+import { useState, useEffect, useRef } from "react";
+import {
+  getNotificationsByUserId,
+  updateNotification,
+} from "../services/notification.service";
+import { getActionById } from "../services/processAction.service";
 
 export default function Navbar() {
   const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) return;
 
     const fetchNotifations = async () => {
-      const newNotifications = await getNotificationsById(user.id);
+      const newNotifications = await getNotificationsByUserId(user.id);
 
       setNotifications(newNotifications);
     };
     fetchNotifations();
   }, [user]);
+
+  const handleNotificationClick = async (n) => {
+    if (n.type === "overdue") {
+      navigate(`/loans/${n.reference_id}`);
+    }
+
+    if (n.type === "approval_request") {
+      navigate("/admin");
+    }
+
+    if (n.type === "approval_result") {
+      console.log(n);
+      const pending_action = await getActionById(n.reference_id);
+      console.log(pending_action);
+      if (pending_action.entity_type === "loan") {
+        navigate("/loans");
+      }
+
+      if (pending_action.entity_type === "customer") {
+        navigate("/customers");
+      }
+    }
+
+    await updateNotification(n.id, { is_read: true });
+  };
 
   const linkClass = (path) =>
     `px-3 py-1 rounded-lg transition ${
@@ -70,7 +118,7 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         {user ? (
           <>
-            <div className="relative">
+            <div className="relative" ref={notificationRef}>
               <button
                 onClick={() => setOpen(!open)}
                 className="relative p-2 rounded-full hover:bg-gray-100 transition"
@@ -95,7 +143,7 @@ export default function Navbar() {
                       No notifications
                     </p>
                   ) : (
-                    <ul className="max-h-60 overflow-y-auto rounded-xl">
+                    <ul className="max-h-60 overflow-y-auto rounded-br-2xl rounded-bl-2xl">
                       {notifications.map((n) => (
                         <li
                           key={n.id}
@@ -104,6 +152,7 @@ export default function Navbar() {
                               ? "text-gray-500"
                               : "font-semibold bg-gray-50"
                           }`}
+                          onClick={() => handleNotificationClick(n)}
                         >
                           {n.message}
                         </li>
