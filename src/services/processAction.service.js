@@ -7,9 +7,11 @@ export const processAction = async (action) => {
 
   if (entity_type === "customer") {
     if (action_type === "create") {
+      // eslint-disable-next-line no-unused-vars
+      const { user_id, ...customer } = formData;
       const { data, error } = await supabase
         .from("customers")
-        .insert([formData])
+        .insert([customer])
         .select();
 
       if (error) throw error;
@@ -17,9 +19,11 @@ export const processAction = async (action) => {
     }
 
     if (action_type === "update") {
+      // eslint-disable-next-line no-unused-vars
+      const { user_id, ...customer } = formData;
       const { error } = await supabase
         .from("customers")
-        .update(formData)
+        .update(customer)
         .eq("id", entity_id);
       if (error) throw error;
     }

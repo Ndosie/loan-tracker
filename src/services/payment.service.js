@@ -18,3 +18,10 @@ export const addPayment = async ({ loan_id, amount }) => {
       .eq("id", schedules[0].id);
   }
 };
+
+export const getPayments = async () => {
+  const { data, error } = await supabase.from("payments").select("*");
+
+  if (error) throw error;
+  return data;
+};

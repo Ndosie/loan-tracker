@@ -3,23 +3,26 @@ import { useState } from "react";
 import { getLoanDetails } from "../services/loanDetails.service";
 import { addPayment } from "../services/payment.service";
 import ScheduleTable from "../components/ScheduleTable";
+import CustomerCard from "../components/CustomerCard";
+import { getCustomerById } from "../services/customer.service";
 
 export async function loader({ params }) {
   const loan = await getLoanDetails(params.loanId);
-  if (!loan) {
+  const customer = await getCustomerById(loan.customer_id);
+  if (!loan || !customer) {
     throw new Response("", {
       status: 404,
       statusText: "Not Found",
     });
   }
-  return { loan };
+  return { loan, customer };
 }
 
 export async function action({ request, params }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const loan = await getLoanDetails(params.loanId);
-  if (Number(data.amount !== loan.installment_amount)) {
+  if (Number(data.amount) !== loan.installment_amount) {
     alert(
       `The amount should be the same as the installment amount ${loan.installment_amount}`,
     );
@@ -31,13 +34,15 @@ export async function action({ request, params }) {
 }
 
 export default function LoanDetails() {
-  const { loan } = useLoaderData();
+  const { loan, customer } = useLoaderData();
+  console.log(loan);
   const [form, setForm] = useState({
     amount: "",
   });
 
   return (
     <div className="space-y-6">
+      <CustomerCard customer={customer} />
       <div className="card">
         <h2 className="text-2xl font-bold mb-4">Loan Details</h2>
 

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import AdminPanel from "./pages/AdminPanel";
 import Users from "./pages/Users";
-import Dashboard from "./pages/Dashboard";
+import Dashboard, { loader as dashboardLoader } from "./pages/Dashboard";
 import Customers, {
   loader as customersLoader,
   action as deleteCustomerAction,
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
-            loader: loansLoader,
+            loader: dashboardLoader,
           },
           {
             path: "customers",

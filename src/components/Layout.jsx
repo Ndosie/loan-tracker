@@ -9,8 +9,7 @@ export default function Layout() {
     <div className="min-h-screen bg-gray-100">
       <Navbar />
       <div className="p-6">
-        {navigation.state === "loading" && <Loading />}
-        <Outlet />
+        {navigation.state === "loading" ? <Loading /> : <Outlet />}
       </div>
     </div>
   );

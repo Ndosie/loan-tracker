@@ -1,12 +1,20 @@
 import { useLoaderData } from "react-router-dom";
 import { checkOverdueLoans } from "../utils/checkOverdueLoans";
 import { useEffect } from "react";
+import { getPayments } from "../services/payment.service";
+import { getLoans } from "../services/loan.service";
+
+export async function loader() {
+  const loans = await getLoans();
+  const payments = await getPayments();
+  return { loans, payments };
+}
 
 export default function Dashboard() {
-  const { loans } = useLoaderData();
+  const { loans, payments } = useLoaderData();
   const totalLoans = loans.length;
   const totalAmount = loans.reduce((sum, l) => sum + l.total_amount, 0);
-  const activeLoans = loans.filter((l) => l.status === "active").length;
+  const totalPayments = payments.reduce((sum, l) => sum + l.amount, 0);
 
   useEffect(() => {
     checkOverdueLoans();
@@ -28,8 +36,8 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-white p-4 rounded shadow">
-          <p>Active Loans</p>
-          <h2 className="text-xl font-bold">{activeLoans}</h2>
+          <p>Total Payments</p>
+          <h2 className="text-xl font-bold">{totalPayments.toLocaleString()}</h2>
         </div>
       </div>
     </div>
