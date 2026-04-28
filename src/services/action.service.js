@@ -112,3 +112,22 @@ export const getActionById = async (id) => {
   if (error) throw error;
   return data;
 };
+
+export const getActions = async () => {
+  const { data, error } = await supabase
+    .from("pending_actions")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateAction = async (id, data) => {
+  const { error } = await supabase
+    .from("pending_actions")
+    .update(data)
+    .eq("id", id);
+
+  if (error) throw error;
+};

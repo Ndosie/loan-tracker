@@ -48,18 +48,6 @@ export const getLoanById = async (id) => {
   return data;
 };
 
-export const updateLoan = async (id, updates) => {
-  const { data, error } = await supabase.from("pending_actions").insert({
-    action_type: "update",
-    entity_type: "loan",
-    entity_id: id,
-    data: updates,
-  });
-
-  if (error) throw error;
-  return data;
-};
-
 export const deleteLoan = async (id, user_id) => {
   const loan = await getLoanById(id);
   const { data, error } = await supabase

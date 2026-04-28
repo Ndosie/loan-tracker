@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import AdminPanel from "./pages/AdminPanel";
-import Users from "./pages/Users";
+import AdminPanel, { loader as actionsLoader } from "./pages/AdminPanel";
+import Users, { loader as usersLoader } from "./pages/Users";
 import Dashboard, { loader as dashboardLoader } from "./pages/Dashboard";
 import Customers, {
   loader as customersLoader,
@@ -94,10 +94,12 @@ const router = createBrowserRouter([
           {
             path: "admin",
             element: <AdminPanel />,
+            loader: actionsLoader,
           },
           {
             path: "admin/users",
             element: <Users />,
+            loader: usersLoader,
           },
         ],
       },

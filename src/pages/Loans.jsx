@@ -23,7 +23,6 @@ export default function Loans() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold">Loans</h2>
-          <p className="text-gray-500 text-sm">Manage all issued loans</p>
         </div>
 
         <Link to="/loans/new" className="btn btn-primary">

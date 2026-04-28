@@ -30,3 +30,8 @@ export const getUsers = async () => {
   if (error) throw error;
   return data;
 };
+
+export const deleteProfile = async (id) => {
+  const { error } = await supabase.from("profiles").delete().eq("id", id);
+  if (error) throw error;
+};

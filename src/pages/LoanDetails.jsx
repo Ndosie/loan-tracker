@@ -9,12 +9,6 @@ import { getCustomerById } from "../services/customer.service";
 export async function loader({ params }) {
   const loan = await getLoanDetails(params.loanId);
   const customer = await getCustomerById(loan.customer_id);
-  if (!loan || !customer) {
-    throw new Response("", {
-      status: 404,
-      statusText: "Not Found",
-    });
-  }
   return { loan, customer };
 }
 
@@ -35,7 +29,6 @@ export async function action({ request, params }) {
 
 export default function LoanDetails() {
   const { loan, customer } = useLoaderData();
-  console.log(loan);
   const [form, setForm] = useState({
     amount: "",
   });

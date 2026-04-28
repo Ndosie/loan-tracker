@@ -7,7 +7,7 @@ import {
   getNotificationsByUserId,
   updateNotification,
 } from "../services/notification.service";
-import { getActionById } from "../services/processAction.service";
+import { getActionById } from "../services/action.service";
 
 export default function Navbar() {
   const { user, profile } = useAuth();

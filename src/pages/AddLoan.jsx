@@ -25,7 +25,6 @@ export default function AddLoan() {
     installment_amount: "",
     duration: "",
   });
-
   const { customers } = useLoaderData();
   const navigate = useNavigate();
   const { user } = useAuth();
