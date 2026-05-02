@@ -11,7 +11,10 @@ export const createNotification = async (users, request) => {
 
   const { data, error } = await supabase
     .from("notifications")
-    .insert(notifications);
+    .upsert(notifications, {
+      onConflict: "reference_id",
+      ignoreDuplicates: true,
+    });
 
   if (error) throw error;
   return data;

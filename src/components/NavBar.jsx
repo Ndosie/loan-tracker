@@ -5,7 +5,7 @@ import { Bell } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import {
   getNotificationsByUserId,
-  updateNotification,
+  deleteNotification,
 } from "../services/notification.service";
 import { getActionById } from "../services/action.service";
 
@@ -38,7 +38,6 @@ export default function Navbar() {
 
     const fetchNotifations = async () => {
       const newNotifications = await getNotificationsByUserId(user.id);
-
       setNotifications(newNotifications);
     };
     fetchNotifations();
@@ -66,7 +65,7 @@ export default function Navbar() {
       }
     }
 
-    await updateNotification(n.id, { is_read: true });
+    await deleteNotification(n.id);
   };
 
   const linkClass = (path) =>

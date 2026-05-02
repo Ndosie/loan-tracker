@@ -47,7 +47,7 @@ export const getOverdueLoans = async () => {
     .from("loan_schedules")
     .select("*, loans(*)")
     .lt("due_date", today)
-    .match({ status: "pending", notified: false });
+    .or("status.eq.pending, notified.eq.false");
 
   if (error) throw error;
   return data;

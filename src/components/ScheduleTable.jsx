@@ -23,7 +23,7 @@ export default function ScheduleTable({ schedules }) {
                     s.status === "paid"
                       ? "text-green-600"
                       : s.status === "overdue"
-                        ? "text-red-600"
+                        ? "text-red-600 animate-blink font-bold"
                         : "text-yellow-600"
                   }
                 >
