@@ -1,10 +1,24 @@
 import { getUsers } from "../services/profile.service";
-import { getOverdueLoans } from "../services/schedule.service";
+import { getPendingLoans, getOverdueLoans } from "../services/schedule.service";
 import { createNotification } from "../services/notification.service";
 import { getCustomerById } from "../services/customer.service";
 import { supabase } from "../services/supabaseClient";
 
-export const checkOverdueLoans = async () => {
+export const setOverdueLoans = async () => {
+  const pendings = await getPendingLoans();
+
+  if (!pendings.length) return;
+
+  await supabase
+    .from("loan_schedules")
+    .update({ status: "overdue" })
+    .in(
+      "id",
+      pendings.map((o) => o.id),
+    );
+};
+
+export const notifyOverdueLoans = async () => {
   const overdues = await getOverdueLoans();
 
   if (!overdues.length) return;
@@ -28,7 +42,7 @@ export const checkOverdueLoans = async () => {
 
   await supabase
     .from("loan_schedules")
-    .update({ notified: true, status: "overdue" })
+    .update({ notified: true })
     .in(
       "id",
       overdues.map((o) => o.id),

@@ -1,15 +1,17 @@
 import { supabase } from "./supabaseClient";
 
 export const addPayment = async ({ loan_id, amount }) => {
-  await supabase.from("payments").insert([{ loan_id, amount }]);
-
   const { data: schedules } = await supabase
     .from("loan_schedules")
     .select("*")
     .eq("loan_id", loan_id)
-    .eq("status", "pending")
+    .in("status", ["overdue", "pending"])
     .order("due_date", { ascending: true })
     .limit(1);
+
+  await supabase
+    .from("payments")
+    .insert([{ loan_id, amount, schedule_id: schedules[0].id }]);
 
   if (schedules.length > 0) {
     await supabase

@@ -1,5 +1,8 @@
 import { useLoaderData } from "react-router-dom";
-import { checkOverdueLoans } from "../utils/checkOverdueLoans";
+import {
+  setOverdueLoans,
+  notifyOverdueLoans,
+} from "../utils/checkOverdueLoans";
 import { useEffect } from "react";
 import { getPayments } from "../services/payment.service";
 import { getLoans } from "../services/loan.service";
@@ -17,7 +20,11 @@ export default function Dashboard() {
   const totalPayments = payments.reduce((sum, l) => sum + l.amount, 0);
 
   useEffect(() => {
-    checkOverdueLoans();
+    const checkOverdues = async () => {
+      await setOverdueLoans();
+      await notifyOverdueLoans();
+    };
+    checkOverdues();
   }, []);
 
   return (
@@ -37,7 +44,9 @@ export default function Dashboard() {
 
         <div className="bg-white p-4 rounded shadow">
           <p>Total Payments</p>
-          <h2 className="text-xl font-bold">{totalPayments.toLocaleString()}</h2>
+          <h2 className="text-xl font-bold">
+            {totalPayments.toLocaleString()}
+          </h2>
         </div>
       </div>
     </div>
