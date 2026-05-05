@@ -2,7 +2,7 @@ import { supabase } from "./supabaseClient";
 
 export const addPayment = async ({ loan_id, amount, payment_date }) => {
   const { data: schedules } = await supabase
-    .from("loan_schedules")
+    .from("schedules")
     .select("*")
     .eq("loan_id", loan_id)
     .in("status", ["overdue", "pending"])
@@ -15,7 +15,7 @@ export const addPayment = async ({ loan_id, amount, payment_date }) => {
 
   if (schedules.length > 0) {
     await supabase
-      .from("loan_schedules")
+      .from("schedules")
       .update({ status: "paid" })
       .eq("id", schedules[0].id);
   }
