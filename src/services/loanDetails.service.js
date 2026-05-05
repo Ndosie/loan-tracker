@@ -13,7 +13,7 @@ export const getLoanDetails = async (loan_id) => {
     .eq("loan_id", loan_id);
 
   const { data: schedules } = await supabase
-    .from("loan_schedules")
+    .from("schedules")
     .select("*")
     .eq("loan_id", loan_id)
     .order("due_date", { ascending: true });

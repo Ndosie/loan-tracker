@@ -6,7 +6,7 @@ const admins = await getUsersByRole("admin");
 
 export const createCustomer = async (customer, user_id) => {
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .insert({
       action_type: "create",
       entity_type: "customer",
@@ -17,7 +17,6 @@ export const createCustomer = async (customer, user_id) => {
     .single();
 
   if (error) throw error;
-  console.log(data);
 
   await createNotification(admins, {
     title: "Approval needed",
@@ -52,7 +51,7 @@ export const getCustomerById = async (id) => {
 
 export const updateCustomer = async (id, updates, user_id) => {
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .insert({
       action_type: "update",
       entity_type: "customer",
@@ -78,7 +77,7 @@ export const updateCustomer = async (id, updates, user_id) => {
 export const deleteCustomer = async (id, user_id) => {
   const customer = await getCustomerById(id);
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .insert({
       action_type: "delete",
       entity_type: "customer",

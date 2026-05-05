@@ -6,7 +6,7 @@ const admins = await getUsersByRole("admin");
 
 export const createLoan = async (loan, user_id) => {
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .insert({
       action_type: "create",
       entity_type: "loan",
@@ -51,7 +51,7 @@ export const getLoanById = async (id) => {
 export const deleteLoan = async (id, user_id) => {
   const loan = await getLoanById(id);
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .insert({
       action_type: "delete",
       entity_type: "loan",

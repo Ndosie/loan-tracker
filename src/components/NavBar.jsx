@@ -53,14 +53,12 @@ export default function Navbar() {
     }
 
     if (n.type === "approval_result") {
-      console.log(n);
-      const pending_action = await getActionById(n.reference_id);
-      console.log(pending_action);
-      if (pending_action.entity_type === "loan") {
+      const action = await getActionById(n.reference_id);
+      if (action.entity_type === "loan") {
         navigate("/loans");
       }
 
-      if (pending_action.entity_type === "customer") {
+      if (action.entity_type === "customer") {
         navigate("/customers");
       }
     }

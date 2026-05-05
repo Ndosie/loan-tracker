@@ -22,7 +22,12 @@ export async function action({ request, params }) {
     );
     return;
   }
-  await addPayment({ loan_id: params.loanId, amount: Number(data.amount) });
+
+  await addPayment({
+    loan_id: params.loanId,
+    amount: Number(data.amount),
+    payment_date: data.payment_date,
+  });
   alert("Payment has been added");
   return redirect(".");
 }
@@ -31,6 +36,7 @@ export default function LoanDetails() {
   const { loan, customer } = useLoaderData();
   const [form, setForm] = useState({
     amount: "",
+    payment_date: "",
   });
 
   return (
@@ -75,7 +81,15 @@ export default function LoanDetails() {
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
-
+            <input
+              className="input flex-1"
+              type="date"
+              name="payment_date"
+              value={form.payment_date}
+              onChange={(e) =>
+                setForm({ ...form, payment_date: e.target.value })
+              }
+            />
             <button type="submit" className="btn btn-primary">
               Pay
             </button>

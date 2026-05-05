@@ -76,7 +76,7 @@ export const processAction = async (action) => {
 
     if (action_type === "delete") {
       const { error: scheduleError } = await supabase
-        .from("loan_schedules")
+        .from("schedules")
         .delete()
         .eq("loan_id", entity_id);
       if (scheduleError) throw scheduleError;
@@ -104,7 +104,7 @@ export const processAction = async (action) => {
 
 export const getActionById = async (id) => {
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .select("*")
     .eq("id", id)
     .single();
@@ -115,7 +115,7 @@ export const getActionById = async (id) => {
 
 export const getActions = async () => {
   const { data, error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -125,7 +125,7 @@ export const getActions = async () => {
 
 export const updateAction = async (id, data) => {
   const { error } = await supabase
-    .from("pending_actions")
+    .from("actions")
     .update(data)
     .eq("id", id);
 

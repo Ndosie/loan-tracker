@@ -4,12 +4,9 @@ import {
   updateAction,
 } from "../services/action.service";
 import { useAuth } from "../context/AuthContext";
-import {
-  createNotification,
-  getNotificationByPendingId,
-} from "../services/notification.service";
+import { createNotification } from "../services/notification.service";
 import { getUserById } from "../services/profile.service";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 export async function loader() {
   const actions = await getActions();
@@ -21,6 +18,7 @@ export default function AdminPanel() {
   const { actions } = useLoaderData();
   const pendingActions = actions.filter((a) => a.status === "pending");
   const processedActions = actions.filter((a) => a.status !== "pending");
+  const navigate = useNavigate();
 
   if (profile?.role !== "admin")
     return (
@@ -33,31 +31,29 @@ export default function AdminPanel() {
     await processAction(action);
     await updateAction(action.id, { status: "approved", reviewed_by: user.id });
 
-    const notification = await getNotificationByPendingId(action.id);
     const creator = await getUserById(action.created_by);
 
     await createNotification([creator], {
       title: "Approved",
-      message: `${notification.message} approved`,
+      message: `${action.action_type.charAt(0).toUpperCase() + action.action_type.slice(1)} ${action.entity_type} request approved`,
       type: "approval_result",
-      reference_table: notification.reference_table,
-      reference_id: notification.reference_id,
+      reference_id: action.id,
     });
+    navigate(".");
   };
 
   const reject = async (action) => {
     await updateAction(action.id, { status: "rejected", reviewed_by: user.id });
 
-    const notification = await getNotificationByPendingId(action.id);
     const creator = await getUserById(action.created_by);
 
     await createNotification([creator], {
       title: "Rejected",
-      message: `${notification.message} rejected`,
+      message: `${action.action_type.charAt(0).toUpperCase() + action.action_type.slice(1)} ${action.entity_type} request rejected`,
       type: "approval_result",
-      reference_table: notification.reference_table,
-      reference_id: notification.reference_id,
+      reference_id: action.id,
     });
+    navigate(".");
   };
 
   return (

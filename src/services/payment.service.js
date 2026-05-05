@@ -1,6 +1,6 @@
 import { supabase } from "./supabaseClient";
 
-export const addPayment = async ({ loan_id, amount }) => {
+export const addPayment = async ({ loan_id, amount, payment_date }) => {
   const { data: schedules } = await supabase
     .from("loan_schedules")
     .select("*")
@@ -11,7 +11,7 @@ export const addPayment = async ({ loan_id, amount }) => {
 
   await supabase
     .from("payments")
-    .insert([{ loan_id, amount, schedule_id: schedules[0].id }]);
+    .insert([{ loan_id, amount, payment_date, schedule_id: schedules[0].id }]);
 
   if (schedules.length > 0) {
     await supabase
