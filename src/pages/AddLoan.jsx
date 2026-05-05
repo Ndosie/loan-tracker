@@ -38,8 +38,9 @@ export default function AddLoan() {
         <div className="mb-3 w-96">
           <label className="block text-sm text-gray-600 mb-1">Customer</label>
           <select
-            className="input"
+            className="input text-gray-600"
             name="customer_id"
+            required
             value={form.customer_id}
             onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
           >
@@ -59,6 +60,7 @@ export default function AddLoan() {
           <input
             type="number"
             name="amount"
+            required
             value={form.amount}
             onChange={(e) => setForm({ ...form, amount: e.target.value })}
             className="input"
@@ -70,9 +72,10 @@ export default function AddLoan() {
             Upfront amount
           </label>
           <input
+            type="number"
             className="input"
             name="upfront_amount"
-            type="number"
+            required
             value={form.upfront_amount}
             onChange={(e) =>
               setForm({ ...form, upfront_amount: e.target.value })
@@ -84,9 +87,10 @@ export default function AddLoan() {
             Installment amount
           </label>
           <input
+            type="number"
             className="input"
             name="installment_amount"
-            type="number"
+            required
             value={form.installment_amount}
             onChange={(e) =>
               setForm({ ...form, installment_amount: e.target.value })
@@ -98,9 +102,10 @@ export default function AddLoan() {
             Duration (weeks)
           </label>
           <input
+            type="number"
             className="input"
             name="duration"
-            type="number"
+            required
             value={form.duration}
             onChange={(e) => setForm({ ...form, duration: e.target.value })}
           />
@@ -108,9 +113,10 @@ export default function AddLoan() {
         <div className="mb-3 w-96">
           <label className="block text-sm text-gray-600 mb-1">Start Date</label>
           <input
-            className="input"
-            name="start_date"
             type="date"
+            className="input text-gray-600"
+            name="start_date"
+            required
             value={form.start_date}
             onChange={(e) => setForm({ ...form, start_date: e.target.value })}
           />

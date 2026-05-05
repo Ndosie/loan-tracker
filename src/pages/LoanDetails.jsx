@@ -82,7 +82,7 @@ export default function LoanDetails() {
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
             <input
-              className="input flex-1"
+              className="input flex-1 text-gray-600"
               type="date"
               name="payment_date"
               value={form.payment_date}

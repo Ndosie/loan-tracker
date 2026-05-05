@@ -35,6 +35,7 @@ export default function AddCustomer() {
           <input
             className="input"
             name="name"
+            required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
@@ -45,6 +46,7 @@ export default function AddCustomer() {
           <input
             className="input"
             name="nida"
+            required
             value={form.nida}
             onChange={(e) => setForm({ ...form, nida: e.target.value })}
           />
@@ -57,6 +59,7 @@ export default function AddCustomer() {
           <input
             className="input"
             name="phone"
+            required
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
           />
@@ -67,6 +70,7 @@ export default function AddCustomer() {
           <input
             className="input"
             name="address"
+            required
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
           />
@@ -78,6 +82,7 @@ export default function AddCustomer() {
           <input
             className="input mb-4"
             name="documents"
+            required
             value={form.documents}
             onChange={(e) => setForm({ ...form, documents: e.target.value })}
           />
