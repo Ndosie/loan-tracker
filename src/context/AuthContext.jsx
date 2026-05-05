@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
+import { getUserById } from "../services/profile.service";
 
 const AuthContext = createContext();
 
@@ -14,13 +15,9 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+    const profile = await getUserById(user.id);
 
-    setProfile(data);
+    setProfile(profile);
   };
 
   useEffect(() => {

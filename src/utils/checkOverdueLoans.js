@@ -10,7 +10,7 @@ export const setOverdueLoans = async () => {
   if (!pendings.length) return;
 
   await supabase
-    .from("loan_schedules")
+    .from("schedules")
     .update({ status: "overdue" })
     .in(
       "id",
@@ -30,7 +30,7 @@ export const notifyOverdueLoans = async () => {
       index === self.findIndex((t) => t.loan_id === obj.loan_id),
   );
 
-  uniqueDues.map(async (overdue) => {
+  const promises = uniqueDues.map(async (overdue) => {
     const customer = await getCustomerById(overdue.loans.customer_id);
     await createNotification(users, {
       title: "Overdue Loan",
@@ -40,8 +40,10 @@ export const notifyOverdueLoans = async () => {
     });
   });
 
+  await Promise.all(promises);
+
   await supabase
-    .from("loan_schedules")
+    .from("schedules")
     .update({ notified: true })
     .in(
       "id",

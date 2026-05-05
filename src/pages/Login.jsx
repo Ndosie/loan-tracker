@@ -30,16 +30,19 @@ export default function Login() {
           <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
 
           <input
+            type="email"
             className="input mb-3"
             placeholder="Email"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
-            className="input mb-4"
             type="password"
+            className="input mb-4"
             placeholder="Password"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

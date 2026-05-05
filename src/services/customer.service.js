@@ -2,8 +2,6 @@ import { supabase } from "./supabaseClient";
 import { createNotification } from "./notification.service";
 import { getUsersByRole } from "./profile.service";
 
-const admins = await getUsersByRole("admin");
-
 export const createCustomer = async (customer, user_id) => {
   const { data, error } = await supabase
     .from("actions")
@@ -17,6 +15,8 @@ export const createCustomer = async (customer, user_id) => {
     .single();
 
   if (error) throw error;
+
+  const admins = await getUsersByRole("admin");
 
   await createNotification(admins, {
     title: "Approval needed",
@@ -64,6 +64,8 @@ export const updateCustomer = async (id, updates, user_id) => {
 
   if (error) throw error;
 
+  const admins = await getUsersByRole("admin");
+
   await createNotification(admins, {
     title: "Approval needed",
     message: "Editing customer request",
@@ -89,6 +91,8 @@ export const deleteCustomer = async (id, user_id) => {
     .single();
 
   if (error) throw error;
+
+  const admins = await getUsersByRole("admin");
 
   await createNotification(admins, {
     title: "Approval needed",

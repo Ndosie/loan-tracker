@@ -63,7 +63,7 @@ export const processAction = async (action) => {
         duration: formData.duration,
         start_date: data.start_date,
       });
-      return data[0];
+      return data;
     }
 
     if (action_type === "update") {

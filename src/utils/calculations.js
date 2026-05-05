@@ -7,7 +7,6 @@ export const calculateBalance = (total, payments) => {
   return total - totalPaid;
 };
 
-
 export const calculateCollections = (payments) => {
   if (!payments) return;
 
