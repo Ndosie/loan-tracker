@@ -75,17 +75,17 @@ export const processAction = async (action) => {
     }
 
     if (action_type === "delete") {
-      const { error: scheduleError } = await supabase
-        .from("schedules")
-        .delete()
-        .eq("loan_id", entity_id);
-      if (scheduleError) throw scheduleError;
-
       const { error: paymentsError } = await supabase
         .from("payments")
         .delete()
         .eq("loan_id", entity_id);
       if (paymentsError) throw paymentsError;
+
+      const { error: scheduleError } = await supabase
+        .from("schedules")
+        .delete()
+        .eq("loan_id", entity_id);
+      if (scheduleError) throw scheduleError;
 
       const { error: penaltiesError } = await supabase
         .from("penalties")
@@ -124,10 +124,7 @@ export const getActions = async () => {
 };
 
 export const updateAction = async (id, data) => {
-  const { error } = await supabase
-    .from("actions")
-    .update(data)
-    .eq("id", id);
+  const { error } = await supabase.from("actions").update(data).eq("id", id);
 
   if (error) throw error;
 };
