@@ -42,10 +42,11 @@ export const formatApprovalData = async (approval) => {
 
   if (approval.entity_type === "customer") {
     return {
-      Name: data.full_name,
+      Name: data.name,
       Phone: data.phone,
       "NIDA / ID": data.nida,
       Address: data.address,
+      Documents: data.documents,
       "Requested By": userName,
       "Reviewed By": reviewerName,
     };
