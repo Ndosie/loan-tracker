@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { createNotification } from "../services/notification.service";
 import { getUserById } from "../services/profile.service";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import ApprovalCard from "../components/ApprovalCard";
 
 export async function loader() {
   const actions = await getActions();
@@ -65,13 +66,7 @@ export default function AdminPanel() {
         ) : (
           pendingActions.map((a) => (
             <div key={a.id} className="border p-4 rounded-lg mb-3">
-              <p className="text-sm text-gray-500">
-                {a.entity_type} - {a.action_type}
-              </p>
-
-              <pre className="text-xs bg-gray-100 p-2 rounded">
-                {JSON.stringify(a.data, null, 2)}
-              </pre>
+              <ApprovalCard key={a.id} approval={a} />
 
               <div className="flex gap-2 mt-3">
                 <button onClick={() => approve(a)} className="btn btn-primary">
@@ -92,17 +87,7 @@ export default function AdminPanel() {
         {processedActions.length === 0 ? (
           <p className="text-sm text-gray-500">No processed actions</p>
         ) : (
-          processedActions.map((a) => (
-            <div key={a.id} className="border p-4 rounded-lg mb-3">
-              <p className="text-sm text-gray-500">
-                {a.entity_type} - {a.action_type}
-              </p>
-
-              <pre className="text-xs bg-gray-100 p-2 rounded">
-                {JSON.stringify(a.data, null, 2)}
-              </pre>
-            </div>
-          ))
+          processedActions.map((a) => <ApprovalCard key={a.id} approval={a} />)
         )}
       </div>
     </div>
