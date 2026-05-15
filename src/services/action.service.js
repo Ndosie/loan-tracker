@@ -128,3 +128,49 @@ export const updateAction = async (id, data) => {
 
   if (error) throw error;
 };
+
+export const getPendingActions = async (limit, offset) => {
+  let q = supabase
+    .from("actions")
+    .select("*")
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  if (limit) q = q.limit(limit);
+  if (offset) q = q.range(offset, offset + (limit - 1));
+
+  const { data, error } = await q;
+  if (error) throw error;
+  return data;
+};
+
+export const processAndReview = async (
+  action,
+  reviewerId,
+  status = "approved",
+) => {
+  // perform action side-effect (create/update/delete)
+  await processAction(action);
+  // then update the action row in one client call
+  const { data, error } = await supabase
+    .from("actions")
+    .update({ status, reviewed_by: reviewerId })
+    .eq("id", action.id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getProcessedActions = async (limit = 5, offset = 0) => {
+  const { data, error } = await supabase
+    .from("actions")
+    .select("*")
+    .neq("status", "pending")
+    .order("created_at", { ascending: false })
+    .range(offset, offset + (limit - 1));
+
+  if (error) throw error;
+  return data;
+};

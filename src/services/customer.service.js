@@ -38,6 +38,17 @@ export const getCustomers = async () => {
   return data;
 };
 
+export const getCustomersByIds = async (ids = []) => {
+  if (!ids.length) return [];
+  const { data, error } = await supabase
+    .from("customers")
+    .select("*")
+    .in("id", ids);
+
+  if (error) throw error;
+  return data;
+};
+
 export const getCustomerById = async (id) => {
   const { data, error } = await supabase
     .from("customers")

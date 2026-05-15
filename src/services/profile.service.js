@@ -1,5 +1,16 @@
 import { supabase } from "./supabaseClient";
 
+export const getUsersByIds = async (ids = []) => {
+  if (!ids.length) return [];
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", ids);
+
+  if (error) throw error;
+  return data;
+};
+
 export const getUserById = async (id) => {
   const { data, error } = await supabase
     .from("profiles")

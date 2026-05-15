@@ -3,26 +3,33 @@ import { getUserById } from "../services/profile.service";
 
 const formatMoney = (num) => new Intl.NumberFormat().format(num);
 
-export const formatApprovalData = async (approval) => {
+export const formatApprovalData = async (
+  approval,
+  { usersMap = {}, customersMap = {} } = {},
+) => {
   const data = approval.data;
 
   let customerName = "-";
   let userName = "-";
   let reviewerName = "-";
 
-  if (data.customer_id) {
-    const customer = await getCustomerById(data.customer_id);
-
+  if (data?.customer_id) {
+    const customer =
+      customersMap[data.customer_id] ||
+      (await getCustomerById(data.customer_id));
     customerName = customer?.name || "-";
   }
 
-  if (approval.created_by) {
-    const user = await getUserById(approval.created_by);
+  if (approval?.created_by) {
+    const user =
+      usersMap[approval.created_by] || (await getUserById(approval.created_by));
     userName = user?.full_name || "-";
   }
 
-  if (approval.reviewed_by) {
-    const user = await getUserById(approval.reviewed_by);
+  if (approval?.reviewed_by) {
+    const user =
+      usersMap[approval.reviewed_by] ||
+      (await getUserById(approval.reviewed_by));
     reviewerName = user?.full_name || "-";
   }
 
@@ -31,7 +38,7 @@ export const formatApprovalData = async (approval) => {
       Customer: customerName,
       Amount: formatMoney(data.amount),
       Upfront: formatMoney(data.upfront_amount),
-      "Total Loan": formatMoney(data.total_amount),
+      "Total Loan": formatMoney(data.amount - data.upfront_amount),
       Installment: formatMoney(data.installment_amount),
       "Duration (weeks)": data.duration,
       "Start Date": data.start_date,

@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatApprovalData } from "../utils/formatApprovalData";
 
-export default function ApprovalCard({ approval }) {
+function ApprovalCard({ approval, usersMap = {}, customersMap = {} }) {
   const [formatted, setFormatted] = useState({});
+
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await formatApprovalData(approval);
-      setFormatted(data);
+    let mounted = true;
+    (async () => {
+      const data = await formatApprovalData(approval, {
+        usersMap,
+        customersMap,
+      });
+      if (mounted) setFormatted(data);
+    })();
+    return () => {
+      mounted = false;
     };
-    fetchData();
-  });
+  }, [approval, usersMap, customersMap]);
 
   return (
     <div className="border p-4 rounded-lg mb-3">
@@ -28,3 +35,5 @@ export default function ApprovalCard({ approval }) {
     </div>
   );
 }
+
+export default React.memo(ApprovalCard);

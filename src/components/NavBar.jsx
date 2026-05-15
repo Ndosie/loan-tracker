@@ -8,6 +8,7 @@ import {
   deleteNotification,
 } from "../services/notification.service";
 import { getActionById } from "../services/action.service";
+import { supabase } from "../services/supabaseClient";
 
 export default function Navbar() {
   const { user, profile } = useAuth();
@@ -27,20 +28,74 @@ export default function Navbar() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
+
+    let isMounted = true;
 
     const fetchNotifations = async () => {
       const newNotifications = await getNotificationsByUserId(user.id);
-      setNotifications(newNotifications);
+      if (isMounted) setNotifications(newNotifications);
     };
+
     fetchNotifations();
+
+    const channel = supabase
+      .channel(`public:notifications:user:${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          setNotifications((prev) => [payload.new, ...prev]);
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const updated = payload.new;
+          setNotifications((prev) => {
+            if (updated.is_read) return prev.filter((n) => n.id !== updated.id);
+            return prev.map((n) => (n.id === updated.id ? updated : n));
+          });
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          setNotifications((prev) =>
+            prev.filter((n) => n.id !== payload.old.id),
+          );
+        },
+      )
+      .subscribe();
+
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const handleNotificationClick = async (n) => {
@@ -62,7 +117,7 @@ export default function Navbar() {
         navigate("/customers");
       }
     }
-
+    setNotifications((prev) => prev.filter((x) => x.id !== n.id));
     await deleteNotification(n.id);
   };
 
