@@ -202,7 +202,7 @@ export default function Navbar() {
                           className={`p-3 text-sm  text-gray-500 cursor-pointer hover:bg-gray-50 ${
                             n.is_read
                               ? "text-gray-500"
-                              : "font-semibold bg-gray-50"
+                              : "font-semibold"
                           }`}
                           onClick={() => handleNotificationClick(n)}
                         >

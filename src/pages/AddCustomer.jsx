@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { createCustomer } from "../services/customer.service";
-import { Form, redirect, useNavigate } from "react-router-dom";
+import { Form, redirect, useNavigate, useNavigation } from "react-router-dom";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -21,8 +21,9 @@ export default function AddCustomer() {
   });
 
   const { user } = useAuth();
-
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className="flex justify-center items-center">
@@ -89,8 +90,12 @@ export default function AddCustomer() {
         </div>
 
         <div className="flex gap-2">
-          <button className="btn btn-primary" type="submit">
-            Save
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Sending..." : "Save"}
           </button>
 
           <button

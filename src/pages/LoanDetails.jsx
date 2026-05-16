@@ -1,4 +1,4 @@
-import { Form, redirect, useLoaderData } from "react-router-dom";
+import { Form, redirect, useLoaderData, useNavigation } from "react-router-dom";
 import { useState } from "react";
 import { getLoanDetails } from "../services/loanDetails.service";
 import { addPayment } from "../services/payment.service";
@@ -38,6 +38,8 @@ export default function LoanDetails() {
     amount: "",
     payment_date: "",
   });
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className="space-y-6">
@@ -78,6 +80,7 @@ export default function LoanDetails() {
               className="input flex-1"
               name="amount"
               placeholder="Enter amount"
+              required
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
@@ -85,13 +88,18 @@ export default function LoanDetails() {
               className="input flex-1 text-gray-600"
               type="date"
               name="payment_date"
+              required
               value={form.payment_date}
               onChange={(e) =>
                 setForm({ ...form, payment_date: e.target.value })
               }
             />
-            <button type="submit" className="btn btn-primary">
-              Pay
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary"
+            >
+              {isSubmitting ? "Adding..." : "Pay"}
             </button>
           </div>
         </Form>

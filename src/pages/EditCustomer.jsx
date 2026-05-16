@@ -29,6 +29,8 @@ export default function EditCustomer() {
     documents: customer.documents,
   });
   const { user } = useAuth();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className="flex justify-center">
@@ -90,8 +92,12 @@ export default function EditCustomer() {
         </div>
 
         <div className="flex gap-2">
-          <button type="submit" className="btn btn-primary">
-            Update
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Sending..." : "Update"}
           </button>
 
           <button

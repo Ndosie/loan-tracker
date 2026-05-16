@@ -149,9 +149,7 @@ export const processAndReview = async (
   reviewerId,
   status = "approved",
 ) => {
-  // perform action side-effect (create/update/delete)
   await processAction(action);
-  // then update the action row in one client call
   const { data, error } = await supabase
     .from("actions")
     .update({ status, reviewed_by: reviewerId })

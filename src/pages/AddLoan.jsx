@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { createLoan } from "../services/loan.service";
 import { getCustomers } from "../services/customer.service";
-import { Form, useNavigate, redirect, useLoaderData } from "react-router-dom";
+import {
+  Form,
+  useNavigate,
+  redirect,
+  useLoaderData,
+  useNavigation,
+} from "react-router-dom";
 
 export async function loader() {
   const customers = await getCustomers();
@@ -28,6 +34,8 @@ export default function AddLoan() {
   const { customers } = useLoaderData();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className="flex justify-center items-center">
@@ -123,8 +131,12 @@ export default function AddLoan() {
         </div>
 
         <div className="flex gap-2 justify-center">
-          <button type="submit" className="btn btn-primary">
-            Create Loan
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Sending..." : "Create Loan"}
           </button>
 
           <button
