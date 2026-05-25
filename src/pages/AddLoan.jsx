@@ -38,12 +38,12 @@ export default function AddLoan() {
   const isSubmitting = navigation.state === "submitting";
 
   return (
-    <div className="flex justify-center items-center">
-      <Form method="post" className="card">
+    <div className="flex justify-center items-center w-full">
+      <Form method="post" className="card w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Create Loan</h2>
         <input type="hidden" name="user_id" value={user.id} />
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Customer</label>
           <select
             className="input text-gray-600"
@@ -61,7 +61,7 @@ export default function AddLoan() {
           </select>
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Loan Amount
           </label>
@@ -75,7 +75,7 @@ export default function AddLoan() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Upfront amount
           </label>
@@ -90,7 +90,7 @@ export default function AddLoan() {
             }
           />
         </div>
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Installment amount
           </label>
@@ -105,7 +105,7 @@ export default function AddLoan() {
             }
           />
         </div>
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Duration (weeks)
           </label>
@@ -118,7 +118,7 @@ export default function AddLoan() {
             onChange={(e) => setForm({ ...form, duration: e.target.value })}
           />
         </div>
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Start Date</label>
           <input
             type="date"
@@ -130,10 +130,10 @@ export default function AddLoan() {
           />
         </div>
 
-        <div className="flex gap-2 justify-center">
+        <div className="flex gap-2 justify-center mt-4">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-primary flex-1"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Sending..." : "Create Loan"}
@@ -142,7 +142,7 @@ export default function AddLoan() {
           <button
             type="button"
             onClick={() => navigate("/loans")}
-            className="btn btn-secondary"
+            className="btn btn-secondary flex-1"
           >
             Cancel
           </button>

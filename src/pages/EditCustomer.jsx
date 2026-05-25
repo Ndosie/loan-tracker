@@ -39,12 +39,12 @@ export default function EditCustomer() {
   const isSubmitting = navigation.state === "submitting";
 
   return (
-    <div className="flex justify-center">
-      <Form method="post" className="card">
+    <div className="flex justify-center w-full">
+      <Form method="post" className="card w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Edit Customer</h2>
 
         <input type="hidden" name="user_id" value={user.id} />
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Name</label>
           <input
             className="input"
@@ -54,7 +54,7 @@ export default function EditCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">NIDA / ID</label>
           <input
             className="input"
@@ -64,7 +64,7 @@ export default function EditCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Phone Number
           </label>
@@ -76,7 +76,7 @@ export default function EditCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Address</label>
           <input
             className="input"
@@ -85,7 +85,7 @@ export default function EditCustomer() {
             onChange={(e) => setForm({ ...form, address: e.target.value })}
           />
         </div>
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Documents Link
           </label>
@@ -100,7 +100,7 @@ export default function EditCustomer() {
         <div className="flex gap-2">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-primary flex-1"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Sending..." : "Update"}
@@ -109,7 +109,7 @@ export default function EditCustomer() {
           <button
             type="button"
             onClick={() => navigate("/customers")}
-            className="btn btn-secondary"
+            className="btn btn-secondary flex-1"
           >
             Cancel
           </button>

@@ -26,12 +26,12 @@ export default function AddCustomer() {
   const isSubmitting = navigation.state === "submitting";
 
   return (
-    <div className="flex justify-center items-center">
-      <Form className="card" method="post">
+    <div className="flex justify-center items-center w-full">
+      <Form className="card w-full max-w-md" method="post">
         <h2 className="text-xl font-bold mb-4">Add Customer</h2>
 
         <input type="hidden" name="user_id" value={user.id} />
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Name</label>
           <input
             className="input"
@@ -42,7 +42,7 @@ export default function AddCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">NIDA / ID</label>
           <input
             className="input"
@@ -53,7 +53,7 @@ export default function AddCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Phone Number
           </label>
@@ -66,7 +66,7 @@ export default function AddCustomer() {
           />
         </div>
 
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">Address</label>
           <input
             className="input"
@@ -76,7 +76,7 @@ export default function AddCustomer() {
             onChange={(e) => setForm({ ...form, address: e.target.value })}
           />
         </div>
-        <div className="mb-3 w-96">
+        <div className="mb-3">
           <label className="block text-sm text-gray-600 mb-1">
             Documents Link
           </label>
@@ -91,7 +91,7 @@ export default function AddCustomer() {
 
         <div className="flex gap-2">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary flex-1"
             type="submit"
             disabled={isSubmitting}
           >
@@ -100,7 +100,7 @@ export default function AddCustomer() {
 
           <button
             onClick={() => navigate("/customers")}
-            className="btn btn-secondary"
+            className="btn btn-secondary flex-1"
             type="button"
           >
             Cancel

@@ -24,8 +24,8 @@ export default function Users() {
     return <p>You are not authorized to access this page.</p>;
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      <div>
         <h2 className="text-2xl font-bold">User Management</h2>
       </div>
       {users.length === 0 ? (

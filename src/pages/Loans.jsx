@@ -19,13 +19,13 @@ export default function Loans() {
   const { user } = useAuth();
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold">Loans</h2>
         </div>
 
-        <Link to="/loans/new" className="btn btn-primary">
+        <Link to="/loans/new" className="btn btn-primary w-full sm:w-auto text-center">
           + Add Loan
         </Link>
       </div>

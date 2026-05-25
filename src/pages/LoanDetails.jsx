@@ -47,7 +47,7 @@ export default function LoanDetails() {
       <div className="card">
         <h2 className="text-2xl font-bold mb-4">Loan Details</h2>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-gray-50 p-4 rounded-xl">
             <p className="text-sm text-gray-500">Total</p>
             <p className="text-lg font-semibold">
@@ -75,7 +75,7 @@ export default function LoanDetails() {
         <h3 className="text-lg font-semibold mb-3">Record Payment</h3>
 
         <Form method="post">
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               className="input flex-1"
               name="amount"
@@ -97,7 +97,7 @@ export default function LoanDetails() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               {isSubmitting ? "Adding..." : "Pay"}
             </button>

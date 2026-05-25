@@ -37,7 +37,7 @@ export default function Dashboard() {
     <div>
       <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded shadow">
           <p>Total Loans</p>
           <h2 className="text-xl font-bold">{totalLoans}</h2>
