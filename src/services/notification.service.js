@@ -1,17 +1,42 @@
 import { supabase } from "./supabaseClient";
 
 export const createNotification = async (users, request) => {
-  const notifications = users.map((user) => ({
-    user_id: user.id,
+  let targetUserId = null;
+  if (Array.isArray(users)) {
+    if (users.length === 1) {
+      targetUserId = users[0].id || users[0];
+    }
+  } else if (users && typeof users === "object") {
+    targetUserId = users.id;
+  } else if (users) {
+    targetUserId = users;
+  }
+
+  // To prevent duplicate global notifications (where user_id is null)
+  if (targetUserId === null) {
+    const { data: existing } = await supabase
+      .from("notifications")
+      .select("id")
+      .eq("reference_id", request.reference_id)
+      .is("user_id", null)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return existing;
+    }
+  }
+
+  const notification = {
+    user_id: targetUserId,
     title: request.title,
     message: request.message,
     type: request.type,
     reference_id: request.reference_id,
-  }));
+  };
 
   const { data, error } = await supabase
     .from("notifications")
-    .upsert(notifications, {
+    .upsert(notification, {
       onConflict: ["user_id", "reference_id"],
       ignoreDuplicates: true,
     });
@@ -28,12 +53,24 @@ export const getNotifications = async () => {
 };
 
 export const getNotificationsByUserId = async (id) => {
-  const { data, error } = await supabase
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", id)
+    .single();
+
+  let query = supabase
     .from("notifications")
     .select("*")
-    .eq("user_id", id)
-    .eq("is_read", false)
-    .order("created_at", { ascending: false });
+    .eq("is_read", false);
+
+  if (profile && profile.role === "admin") {
+    query = query.or(`user_id.eq.${id},user_id.is.null`);
+  } else {
+    query = query.eq("user_id", id);
+  }
+
+  const { data, error } = await query.order("created_at", { ascending: false });
 
   if (error) throw error;
   return data;

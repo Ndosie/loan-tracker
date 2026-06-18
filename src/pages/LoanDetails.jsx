@@ -15,18 +15,12 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  const loan = await getLoanDetails(params.loanId);
-  if (Number(data.amount) !== loan.installment_amount) {
-    alert(
-      `The amount should be the same as the installment amount ${loan.installment_amount}`,
-    );
-    return;
-  }
 
   await addPayment({
     loan_id: params.loanId,
     amount: Number(data.amount),
     payment_date: data.payment_date,
+    reference: data.reference,
   });
   alert("Payment has been added");
   return redirect(".");
@@ -37,6 +31,7 @@ export default function LoanDetails() {
   const [form, setForm] = useState({
     amount: "",
     payment_date: "",
+    reference: "",
   });
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -71,7 +66,7 @@ export default function LoanDetails() {
         </div>
       </div>
 
-      <div className="card max-w-md">
+      <div className="card max-w-2xl">
         <h3 className="text-lg font-semibold mb-3">Record Payment</h3>
 
         <Form method="post">
@@ -85,7 +80,14 @@ export default function LoanDetails() {
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
             <input
-              className="input flex-1 text-gray-600"
+              className="input flex-1"
+              name="reference"
+              placeholder="Reference"
+              value={form.reference}
+              onChange={(e) => setForm({ ...form, reference: e.target.value })}
+            />
+            <input
+              className="input flex-1 text-gray-300"
               type="date"
               name="payment_date"
               required
@@ -117,9 +119,16 @@ export default function LoanDetails() {
                 key={p.id}
                 className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
               >
-                <span className="text-sm text-gray-600">
-                  {new Date(p.payment_date).toLocaleDateString()}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-sm text-gray-600">
+                    {new Date(p.payment_date).toLocaleDateString()}
+                  </span>
+                  {p.reference && (
+                    <span className="text-[10px] text-gray-400">
+                      Ref: {p.reference}
+                    </span>
+                  )}
+                </div>
 
                 <span className="font-semibold">
                   {p.amount.toLocaleString()}

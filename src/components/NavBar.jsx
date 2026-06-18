@@ -49,47 +49,41 @@ export default function Navbar() {
     fetchNotifations();
 
     const channel = supabase
-      .channel(`public:notifications:user:${user.id}`)
+      .channel("public:notifications")
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "notifications",
-          filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          setNotifications((prev) => [payload.new, ...prev]);
-        },
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          const updated = payload.new;
-          setNotifications((prev) => {
-            if (updated.is_read) return prev.filter((n) => n.id !== updated.id);
-            return prev.map((n) => (n.id === updated.id ? updated : n));
-          });
-        },
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "DELETE",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          setNotifications((prev) =>
-            prev.filter((n) => n.id !== payload.old.id),
-          );
+          const newNotif = payload.new;
+          const oldNotif = payload.old;
+
+          if (payload.eventType === "INSERT") {
+            const isForUser = newNotif.user_id === user.id || (newNotif.user_id === null && profile?.role === "admin");
+            if (isForUser) {
+              setNotifications((prev) => {
+                if (prev.some((n) => n.id === newNotif.id)) return prev;
+                return [newNotif, ...prev];
+              });
+            }
+          } else if (payload.eventType === "UPDATE") {
+            const isForUser = newNotif.user_id === user.id || (newNotif.user_id === null && profile?.role === "admin");
+            if (isForUser) {
+              setNotifications((prev) => {
+                if (newNotif.is_read) return prev.filter((n) => n.id !== newNotif.id);
+                return prev.map((n) => (n.id === newNotif.id ? newNotif : n));
+              });
+            } else {
+              setNotifications((prev) => prev.filter((n) => n.id !== newNotif.id));
+            }
+          } else if (payload.eventType === "DELETE") {
+            setNotifications((prev) =>
+              prev.filter((n) => n.id !== oldNotif.id),
+            );
+          }
         },
       )
       .subscribe();
@@ -98,7 +92,7 @@ export default function Navbar() {
       isMounted = false;
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, profile]);
 
   const handleNotificationClick = async (n) => {
     if (n.type === "overdue") {

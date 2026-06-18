@@ -1,3 +1,4 @@
+import { deleteLoan } from "./loan.service";
 import { supabase } from "./supabaseClient";
 
 export const generateSchedule = async ({
@@ -32,9 +33,14 @@ export const generateSchedule = async ({
     }
   }
 
-  const { data, error } = await supabase
-    .from("schedules")
-    .insert(schedules);
+  if (remained) {
+    deleteLoan(loan_id);
+    throw new Error(
+      "The defined duration does not cover the loan with the defined installment",
+    );
+  }
+
+  const { data, error } = await supabase.from("schedules").insert(schedules);
 
   if (error) throw error;
   return data;
@@ -57,7 +63,7 @@ export const getOverdueLoans = async () => {
   const { data, error } = await supabase
     .from("schedules")
     .select("*, loans(*)")
-    .or("status.eq.overdue, notified.eq.false");
+    .eq("status", "overdue");
 
   if (error) throw error;
   return data;

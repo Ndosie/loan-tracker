@@ -20,12 +20,13 @@ export const setOverdueLoans = async () => {
 
 export const notifyOverdueLoans = async () => {
   const overdues = await getOverdueLoans();
+  const unnotified = overdues.filter((o) => !o.notified);
 
-  if (!overdues.length) return;
+  if (!unnotified.length) return;
 
   const users = await getUsers();
 
-  const uniqueDues = overdues.filter(
+  const uniqueDues = unnotified.filter(
     (obj, index, self) =>
       index === self.findIndex((t) => t.loan_id === obj.loan_id),
   );
@@ -47,6 +48,6 @@ export const notifyOverdueLoans = async () => {
     .update({ notified: true })
     .in(
       "id",
-      overdues.map((o) => o.id),
+      unnotified.map((o) => o.id),
     );
 };

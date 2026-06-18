@@ -39,7 +39,6 @@ export const processAction = async (action) => {
 
   if (entity_type === "loan") {
     if (action_type === "create") {
-      console.log(formData);
       // eslint-disable-next-line no-unused-vars
       const { user_id, ...loan } = formData;
       const total_amount = calculateTotalLoan(loan.amount, loan.upfront_amount);
