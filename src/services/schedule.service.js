@@ -1,4 +1,4 @@
-import { deleteLoan } from "./loan.service";
+import { deleteLoanById } from "./loan.service";
 import { supabase } from "./supabaseClient";
 
 export const generateSchedule = async ({
@@ -23,6 +23,7 @@ export const generateSchedule = async ({
         due_date: dueDate,
         amount_due: remained,
       });
+      remained = 0;
       break;
     } else {
       schedules.push({
@@ -34,7 +35,7 @@ export const generateSchedule = async ({
   }
 
   if (remained) {
-    deleteLoan(loan_id);
+    deleteLoanById(loan_id);
     throw new Error(
       "The defined duration does not cover the loan with the defined installment",
     );

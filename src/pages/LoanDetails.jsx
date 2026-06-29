@@ -83,6 +83,7 @@ export default function LoanDetails() {
               className="input flex-1"
               name="reference"
               placeholder="Reference"
+              required
               value={form.reference}
               onChange={(e) => setForm({ ...form, reference: e.target.value })}
             />

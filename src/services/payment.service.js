@@ -25,7 +25,6 @@ export const addPayment = async ({
 
       if (remainingPayment >= schedule.amount_due) {
         const loan = await getLoanById(loan_id);
-        console.log(loan);
         await supabase
           .from("schedules")
           .update({ status: "paid", amount_due: loan.installment_amount })

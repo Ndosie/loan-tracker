@@ -48,6 +48,11 @@ export const getLoanById = async (id) => {
   return data;
 };
 
+export const deleteLoanById = async (id) => {
+  const { error: error } = await supabase.from("loans").delete().eq("id", id);
+  if (error) throw error;
+};
+
 export const deleteLoan = async (id, user_id) => {
   const loan = await getLoanById(id);
   const { data, error } = await supabase
