@@ -16,24 +16,28 @@ export const calculateCollections = (payments) => {
     now.getFullYear(),
     now.getMonth(),
     1,
-  ).toISOString();
+  ).toDateString();
 
   const startOfLastMonth = new Date(
     now.getFullYear(),
     now.getMonth() - 1,
     1,
-  ).toISOString();
+  ).toDateString();
 
   const endOfLastMonth = new Date(
     now.getFullYear(),
     now.getMonth(),
     0,
-  ).toISOString();
+  ).toDateString();
 
   const day = now.getDay();
   const diff = now.getDate() - day + (day === 0 ? -6 : 1);
 
-  const startOfWeek = new Date(now.setDate(diff)).toISOString();
+  const startOfWeek = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    diff,
+  ).toDateString();
 
   let thisMonth = 0;
   let lastMonth = 0;
