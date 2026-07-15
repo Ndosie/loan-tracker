@@ -28,6 +28,33 @@ export const createLoan = async (loan, user_id) => {
   return data;
 };
 
+export const editLoan = async (id, updates, user_id) => {
+  const { data, error } = await supabase
+    .from("actions")
+    .insert({
+      action_type: "update",
+      entity_type: "loan",
+      entity_id: id,
+      data: updates,
+      created_by: user_id,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  const admins = await getUsersByRole("admin");
+
+  await createNotification(admins, {
+    title: "Approval needed",
+    message: "Loan editing request",
+    type: "approval_request",
+    reference_id: data.id,
+  });
+
+  return data;
+};
+
 export const getLoans = async () => {
   const { data, error } = await supabase
     .from("loans")

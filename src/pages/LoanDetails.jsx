@@ -15,14 +15,17 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-
-  await addPayment({
-    loan_id: params.loanId,
-    amount: Number(data.amount),
-    payment_date: data.payment_date,
-    reference: data.reference,
-  });
-  alert("Payment has been added");
+  try {
+    await addPayment({
+      loan_id: params.loanId,
+      amount: Number(data.amount),
+      payment_date: data.payment_date,
+      reference: data.reference,
+    });
+    alert("Payment has been added");
+  } catch (error) {
+    alert(`Error has occured! ${error.details}`);
+  }
   return redirect(".");
 }
 
@@ -88,7 +91,7 @@ export default function LoanDetails() {
               onChange={(e) => setForm({ ...form, reference: e.target.value })}
             />
             <input
-              className="input flex-1 text-gray-300"
+              className="input flex-1 text-gray-400"
               type="date"
               name="payment_date"
               required

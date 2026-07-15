@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -8,12 +8,12 @@
   --color-blue-300: #efa6ae;
   --color-blue-400: #e37480;
   --color-blue-500: #d14d5a;
-  --color-blue-600: #B53F4B; /* Main Burgundy Crimson Accent Color */
+  --color-blue-600: #b53f4b; /* Main Burgundy Crimson Accent Color */
   --color-blue-700: #982f3a;
   --color-blue-800: #7e2932;
   --color-blue-900: #69252c;
   --color-blue-950: #3b0f13;
-  
+
   --color-gray-50: #fafafa;
   --color-gray-100: #f4f4f5; /* clean light gray for background */
   --color-gray-200: #e4e4e7;
@@ -26,7 +26,7 @@
   --color-gray-900: #18181b;
   --color-gray-950: #09090b;
 
-  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -44,7 +44,7 @@ body {
 
 /* Custom premium input style */
 .input {
-  @apply w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200;
+  @apply w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200;
 }
 
 /* Custom button classes */
@@ -91,4 +91,3 @@ body {
     animation: blink 1s linear infinite;
   }
 }
-

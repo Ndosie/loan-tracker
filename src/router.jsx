@@ -26,6 +26,11 @@ import EditCustomer, {
   loader as editCustomerLoader,
   action as editCustomerAction,
 } from "./pages/EditCustomer";
+import EditLoan, {
+  loader as editLoanLoader,
+  action as editLoanAction,
+} from "./pages/EditLoan";
+
 import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
@@ -86,6 +91,12 @@ const router = createBrowserRouter([
             element: <LoanDetails />,
             loader: loanDetailsLoader,
             action: loanDetailsAction,
+          },
+          {
+            path: "loans/:loanId/edit",
+            element: <EditLoan />,
+            loader: editLoanLoader,
+            action: editLoanAction,
           },
           {
             path: "loans/delete",

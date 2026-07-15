@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { supabase } from "./supabaseClient";
 import { generateSchedule } from "./schedule.service";
 import { calculateTotalLoan } from "../utils/calculations";
@@ -7,7 +8,6 @@ export const processAction = async (action) => {
 
   if (entity_type === "customer") {
     if (action_type === "create") {
-      // eslint-disable-next-line no-unused-vars
       const { user_id, ...customer } = formData;
       const { data, error } = await supabase
         .from("customers")
@@ -19,7 +19,6 @@ export const processAction = async (action) => {
     }
 
     if (action_type === "update") {
-      // eslint-disable-next-line no-unused-vars
       const { user_id, ...customer } = formData;
       const { error } = await supabase
         .from("customers")
@@ -39,7 +38,6 @@ export const processAction = async (action) => {
 
   if (entity_type === "loan") {
     if (action_type === "create") {
-      // eslint-disable-next-line no-unused-vars
       const { user_id, ...loan } = formData;
       const total_amount = calculateTotalLoan(loan.amount, loan.upfront_amount);
       const { data, error } = await supabase
@@ -66,11 +64,22 @@ export const processAction = async (action) => {
     }
 
     if (action_type === "update") {
-      const { error } = await supabase
-        .from("loans")
-        .update(formData)
-        .eq("id", entity_id);
-      if (error) throw error;
+      if (formData.status === "defaulted") {
+        const { error: scheduleError } = await supabase
+          .from("schedules")
+          .update({ status: formData.status })
+          .eq("loan_id", entity_id)
+          .neq("status", "paid")
+          .select();
+        if (scheduleError) throw scheduleError;
+
+        const { error: loanError } = await supabase
+          .from("loans")
+          .update({ status: formData.status })
+          .eq("id", entity_id)
+          .select();
+        if (loanError) throw loanError;
+      }
     }
 
     if (action_type === "delete") {

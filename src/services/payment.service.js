@@ -17,6 +17,17 @@ export const addPayment = async ({
   let remainingPayment = amount;
   let schedule = null;
 
+  const { data, error } = await supabase.from("payments").insert([
+    {
+      loan_id,
+      amount: amount,
+      payment_date,
+      reference: reference || null,
+    },
+  ]);
+
+  if (error) throw error;
+
   if (schedules && schedules.length > 0) {
     for (let i = 0; i < schedules.length; i++) {
       if (remainingPayment <= 0) break;
@@ -43,14 +54,7 @@ export const addPayment = async ({
     }
   }
 
-  await supabase.from("payments").insert([
-    {
-      loan_id,
-      amount: amount,
-      payment_date,
-      reference: reference || null,
-    },
-  ]);
+  return data;
 };
 
 export const getPayments = async () => {

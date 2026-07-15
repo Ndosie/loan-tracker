@@ -63,7 +63,7 @@ export const getPendingLoans = async () => {
 export const getOverdueLoans = async () => {
   const { data, error } = await supabase
     .from("schedules")
-    .select("*, loans(*)")
+    .select("*")
     .eq("status", "overdue");
 
   if (error) throw error;

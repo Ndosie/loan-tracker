@@ -41,7 +41,7 @@ export default function AdminPanel() {
   const [loadingIds, setLoadingIds] = useState(new Set());
   const PAGE_SIZE = 5;
   const [processed, setProcessed] = useState([]);
-  const [processedPage, setProcessedPage] = useState(0); // 0-based
+  const [processedPage, setProcessedPage] = useState(0);
   const [processedLoading, setProcessedLoading] = useState(false);
   const [processedHasMore, setProcessedHasMore] = useState(true);
   const [showProcessed, setShowProcessed] = useState(false);

@@ -25,7 +25,10 @@ export default function Loans() {
           <h2 className="text-2xl font-bold">Loans</h2>
         </div>
 
-        <Link to="/loans/new" className="btn btn-primary w-full sm:w-auto text-center">
+        <Link
+          to="/loans/new"
+          className="btn btn-primary w-full sm:w-auto text-center"
+        >
           + Add Loan
         </Link>
       </div>
@@ -71,7 +74,14 @@ export default function Loans() {
                   </td>
 
                   <td className="space-x-2">
+                    <Link
+                      to={`/loans/${l.id}/edit`}
+                      className="px-3 py-1 text-xs bg-blue-500 text-white rounded"
+                    >
+                      Edit
+                    </Link>
                     <Form
+                      className="inline"
                       method="post"
                       action="delete"
                       onSubmit={(e) => {
