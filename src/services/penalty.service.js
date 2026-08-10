@@ -3,7 +3,6 @@ import { supabase } from "./supabaseClient";
 export const applyPenalties = async () => {
   const today = new Date();
 
-  // Get overdue schedules
   const { data: overdue } = await supabase
     .from("loan_schedules")
     .select("*")
@@ -11,7 +10,6 @@ export const applyPenalties = async () => {
     .eq("status", "pending");
 
   for (const item of overdue) {
-    // Check if penalty already exists
     const { data: existing } = await supabase
       .from("penalties")
       .select("*")
@@ -29,7 +27,6 @@ export const applyPenalties = async () => {
         },
       ]);
 
-      // Mark overdue
       await supabase
         .from("loan_schedules")
         .update({ status: "overdue" })

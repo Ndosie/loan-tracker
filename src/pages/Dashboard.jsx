@@ -8,6 +8,8 @@ import { getPayments } from "../services/payment.service";
 import { getLoans } from "../services/loan.service";
 import { getOverdueLoans } from "../services/schedule.service";
 import { calculateCollections } from "../utils/calculations";
+import { useAuth } from "../context/AuthContext";
+import { getNotificationsByUserId } from "../services/notification.service";
 
 export async function loader() {
   const loans = await getLoans();
@@ -24,6 +26,7 @@ export default function Dashboard() {
   const totalUpfront = loans.reduce((sum, l) => sum + l.upfront_amount, 0);
   const totalOverdues = overdues.reduce((sum, o) => sum + o.amount_due, 0);
   const { lastMonth, thisMonth, thisWeek } = calculateCollections(payments);
+  const { user, setNotifications } = useAuth();
 
   useEffect(() => {
     const checkOverdues = async () => {
@@ -31,7 +34,12 @@ export default function Dashboard() {
       await notifyOverdueLoans();
     };
     checkOverdues();
-  }, []);
+    const setNewNotifications = async () => {
+      const newNotifications = await getNotificationsByUserId(user.id);
+      setNotifications(newNotifications);
+    };
+    setNewNotifications();
+  }, [user]);
 
   return (
     <div>

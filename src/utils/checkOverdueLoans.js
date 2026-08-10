@@ -1,8 +1,12 @@
 import { getUsers } from "../services/profile.service";
 import { getPendingLoans, getOverdueLoans } from "../services/schedule.service";
-import { createNotification } from "../services/notification.service";
+import {
+  createNotification,
+  getNotificationByLoanId,
+} from "../services/notification.service";
 import { getCustomerById } from "../services/customer.service";
 import { supabase } from "../services/supabaseClient";
+import { getLoanById } from "../services/loan.service";
 
 export const setOverdueLoans = async () => {
   const pendings = await getPendingLoans();
@@ -20,19 +24,26 @@ export const setOverdueLoans = async () => {
 
 export const notifyOverdueLoans = async () => {
   const overdues = await getOverdueLoans();
-  const unnotified = overdues.filter((o) => !o.notified);
 
-  if (!unnotified.length) return;
+  if (!overdues.length) return;
 
   const users = await getUsers();
 
-  const uniqueDues = unnotified.filter(
+  const uniqueDues = overdues.filter(
     (obj, index, self) =>
       index === self.findIndex((t) => t.loan_id === obj.loan_id),
   );
 
-  const promises = uniqueDues.map(async (overdue) => {
-    const customer = await getCustomerById(overdue.loans.customer_id);
+  const unNotified = uniqueDues.filter(async (u) => {
+    const notifications = await getNotificationByLoanId(u.loan_id);
+    if (notifications.length > 0) return false;
+    else return true;
+  });
+
+  const promises = unNotified.map(async (overdue) => {
+    const loan = await getLoanById(overdue.loan_id);
+    const customer = await getCustomerById(loan.customer_id);
+
     await createNotification(users, {
       title: "Overdue Loan",
       message: `Loan for ${customer.name} is overdue`,
@@ -42,12 +53,4 @@ export const notifyOverdueLoans = async () => {
   });
 
   await Promise.all(promises);
-
-  await supabase
-    .from("schedules")
-    .update({ notified: true })
-    .in(
-      "id",
-      unnotified.map((o) => o.id),
-    );
 };

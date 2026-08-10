@@ -12,7 +12,6 @@ export const createNotification = async (users, request) => {
     targetUserId = users;
   }
 
-  // To prevent duplicate global notifications (where user_id is null)
   if (targetUserId === null) {
     const { data: existing } = await supabase
       .from("notifications")
@@ -59,10 +58,7 @@ export const getNotificationsByUserId = async (id) => {
     .eq("id", id)
     .single();
 
-  let query = supabase
-    .from("notifications")
-    .select("*")
-    .eq("is_read", false);
+  let query = supabase.from("notifications").select("*").eq("is_read", false);
 
   if (profile && profile.role === "admin") {
     query = query.or(`user_id.eq.${id},user_id.is.null`);
@@ -82,6 +78,16 @@ export const getNotificationByPendingId = async (id) => {
     .select("*")
     .eq("reference_id", id)
     .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getNotificationByLoanId = async (id) => {
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("reference_id", id);
 
   if (error) throw error;
   return data;
