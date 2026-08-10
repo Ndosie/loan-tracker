@@ -52,19 +52,8 @@ export const getNotifications = async () => {
 };
 
 export const getNotificationsByUserId = async (id) => {
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", id)
-    .single();
-
   let query = supabase.from("notifications").select("*").eq("is_read", false);
-
-  if (profile && profile.role === "admin") {
-    query = query.or(`user_id.eq.${id},user_id.is.null`);
-  } else {
-    query = query.eq("user_id", id);
-  }
+  query = query.or(`user_id.eq.${id},user_id.is.null`);
 
   const { data, error } = await query.order("created_at", { ascending: false });
 

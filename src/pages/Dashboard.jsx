@@ -39,7 +39,7 @@ export default function Dashboard() {
       setNotifications(newNotifications);
     };
     setNewNotifications();
-  }, [user]);
+  });
 
   return (
     <div>
