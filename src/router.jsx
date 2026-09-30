@@ -31,6 +31,8 @@ import EditLoan, {
   action as editLoanAction,
 } from "./pages/EditLoan";
 
+import OverdueLoans, { loader as overdueLoader } from "./pages/OverdueLoans";
+
 import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
@@ -54,6 +56,11 @@ const router = createBrowserRouter([
             index: true,
             element: <Dashboard />,
             loader: dashboardLoader,
+          },
+          {
+            path: "/overdues",
+            element: <OverdueLoans />,
+            loader: overdueLoader,
           },
           {
             path: "customers",

@@ -1,4 +1,5 @@
-import { deleteLoanById } from "./loan.service";
+import { getCustomerById } from "./customer.service";
+import { deleteLoanById, getLoanById } from "./loan.service";
 import { supabase } from "./supabaseClient";
 
 export const generateSchedule = async ({
@@ -61,11 +62,34 @@ export const getPendingLoans = async () => {
 };
 
 export const getOverdueLoans = async () => {
-  const { data, error } = await supabase
+  const { data: overdues, error } = await supabase
     .from("schedules")
-    .select("*")
+    .select("loan_id, amount_due:amount_due.sum()")
     .eq("status", "overdue");
 
   if (error) throw error;
-  return data;
+  if (!overdues.length) return [];
+
+  const loanIds = overdues.map(({ loan_id }) => loan_id);
+
+  const { data: loans, error: loansError } = await supabase
+    .from("loans")
+    .select("id, customers!inner(name, phone)")
+    .in("id", loanIds);
+
+  if (loansError) throw loansError;
+
+  const customerByLoanId = new Map(
+    loans.map((loan) => [
+      loan.id,
+      { name: loan.customers.name, phone: loan.customers.phone },
+    ]),
+  );
+  console.log(customerByLoanId);
+
+  return overdues.map((overdue) => ({
+    ...overdue,
+    customer: customerByLoanId.get(overdue.loan_id).name,
+    phone: customerByLoanId.get(overdue.loan_id).phone,
+  }));
 };

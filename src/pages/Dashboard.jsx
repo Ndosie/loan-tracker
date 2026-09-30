@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import {
   setOverdueLoans,
   notifyOverdueLoans,
@@ -67,13 +67,14 @@ export default function Dashboard() {
             {totalPayments.toLocaleString()}
           </h2>
         </div>
-
-        <div className="bg-white p-4 rounded shadow">
-          <p>Total Overdues</p>
-          <h2 className="text-xl font-bold">
-            {totalOverdues.toLocaleString()}
-          </h2>
-        </div>
+        <Link to="/overdues">
+          <div className="bg-white p-4 rounded shadow">
+            <p>Total Overdues</p>
+            <h2 className="text-xl font-bold">
+              {totalOverdues.toLocaleString()}
+            </h2>
+          </div>
+        </Link>
 
         <div className="bg-white p-4 rounded shadow">
           <p>Last Month Collections</p>
