@@ -38,6 +38,7 @@ export default function LoanDetails() {
   });
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -113,40 +114,54 @@ export default function LoanDetails() {
 
       <div className="card">
         <h3 className="text-lg font-semibold mb-4">Payments History</h3>
-
-        {loan.payments.length === 0 ? (
-          <p className="text-gray-500 text-sm">No payments yet</p>
-        ) : (
-          <div className="space-y-2">
-            {loan.payments.map((p) => (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex justify-center p-4 font-medium bg-gray-50 cursor-pointer"
+        >
+          <span>View Payment History</span>
+        </button>
+        <div
+          className={`grid mt-4 transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+        >
+          <div className="overflow-hidden">
+            {loan.payments.length === 0 ? (
+              <p className="text-gray-500 text-sm">No payments yet</p>
+            ) : (
               <div
-                key={p.id}
-                className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
+                className={`space-y-2 grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
               >
-                <div className="flex flex-col">
-                  <span className="text-sm text-gray-600">
-                    {new Date(p.payment_date).toLocaleDateString()}
-                  </span>
-                  {p.reference && (
-                    <span className="text-[10px] text-gray-400">
-                      Ref: {p.reference}
-                    </span>
-                  )}
-                </div>
+                {loan.payments.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-600">
+                        {new Date(p.payment_date).toLocaleDateString()}
+                      </span>
+                      {p.reference && (
+                        <span className="text-[10px] text-gray-400">
+                          Ref: {p.reference}
+                        </span>
+                      )}
+                    </div>
 
-                <span className="font-semibold">
-                  {p.amount.toLocaleString()}
-                </span>
+                    <span className="font-semibold">
+                      {p.amount.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="card">
         <h3 className="text-lg font-semibold mb-4">Repayment Schedule</h3>
-
-        <ScheduleTable schedules={loan.schedules} />
+        <div className="h-64 overflow-y-auto">
+          <ScheduleTable schedules={loan.schedules} />
+        </div>
       </div>
 
       <div className="card">
