@@ -85,7 +85,6 @@ export const getOverdueLoans = async () => {
       { name: loan.customers.name, phone: loan.customers.phone },
     ]),
   );
-  console.log(customerByLoanId);
 
   return overdues.map((overdue) => ({
     ...overdue,

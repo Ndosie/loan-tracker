@@ -63,3 +63,38 @@ export const getPayments = async () => {
   if (error) throw error;
   return data;
 };
+
+export const getWeeklyPayments = async () => {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  const { data: payments, error } = await supabase
+    .from("payments")
+    .select("loan_id, amount:amount.sum()")
+    .gte("payment_date", oneWeekAgo.toISOString());
+
+  if (error) throw error;
+  if (!payments.length) return [];
+
+  const loanIds = payments.map(({ loan_id }) => loan_id);
+
+  const { data: loans, error: loansError } = await supabase
+    .from("loans")
+    .select("id, customers!inner(name,phone)")
+    .in("id", loanIds);
+
+  if (loansError) throw loansError;
+
+  const customerByLoanId = new Map(
+    loans.map((loan) => [
+      loan.id,
+      { name: loan.customers.name, phone: loan.customers.phone },
+    ]),
+  );
+
+  return payments.map((payment) => ({
+    ...payment,
+    customer: customerByLoanId.get(payment.loan_id).name,
+    phone: customerByLoanId.get(payment.loan_id).phone,
+  }));
+};

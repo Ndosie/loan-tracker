@@ -34,6 +34,7 @@ import EditLoan, {
 import OverdueLoans, { loader as overdueLoader } from "./pages/OverdueLoans";
 
 import ErrorPage from "./pages/ErrorPage";
+import WeeklyPayments, { loader as weeklyLoader } from "./pages/WeeklyPayments";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,11 @@ const router = createBrowserRouter([
             path: "/overdues",
             element: <OverdueLoans />,
             loader: overdueLoader,
+          },
+          {
+            path: "/thisweek",
+            element: <WeeklyPayments />,
+            loader: weeklyLoader,
           },
           {
             path: "customers",

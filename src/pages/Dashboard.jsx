@@ -86,10 +86,12 @@ export default function Dashboard() {
           <h2 className="text-xl font-bold">{thisMonth.toLocaleString()}</h2>
         </div>
 
-        <div className="bg-white p-4 rounded shadow">
-          <p>This Week Collections</p>
-          <h2 className="text-xl font-bold">{thisWeek.toLocaleString()}</h2>
-        </div>
+        <Link to="/thisweek">
+          <div className="bg-white p-4 rounded shadow">
+            <p>This Week Collections</p>
+            <h2 className="text-xl font-bold">{thisWeek.toLocaleString()}</h2>
+          </div>
+        </Link>
       </div>
     </div>
   );
