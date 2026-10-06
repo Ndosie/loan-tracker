@@ -27,6 +27,7 @@ export default function WeeklyPayments() {
                 <th className="p-3">Customer</th>
                 <th className="p-3">Phone</th>
                 <th className="p-3">Amount</th>
+                <th className="p-3">Date</th>
                 <th className="p-3">View</th>
               </tr>
             </thead>
@@ -37,6 +38,7 @@ export default function WeeklyPayments() {
                   <td className="p-3">{l.customer}</td>
                   <td className="p-3">{l.phone}</td>
                   <td className="p-3">{l.amount.toLocaleString()}</td>
+                  <td className="p-3">{l.payment_date}</td>
                   <td>
                     <Link
                       to={`/loans/${l.loan_id}`}

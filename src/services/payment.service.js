@@ -65,13 +65,15 @@ export const getPayments = async () => {
 };
 
 export const getWeeklyPayments = async () => {
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const now = new Date();
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day === 0 ? -7 : 0);
+  const startOfWeek = new Date(now.getFullYear(), now.getMonth(), diff);
 
   const { data: payments, error } = await supabase
     .from("payments")
-    .select("loan_id, amount:amount.sum()")
-    .gte("payment_date", oneWeekAgo.toISOString());
+    .select("loan_id, amount:amount.sum(), payment_date")
+    .gte("payment_date", startOfWeek.toDateString());
 
   if (error) throw error;
   if (!payments.length) return [];
@@ -88,7 +90,10 @@ export const getWeeklyPayments = async () => {
   const customerByLoanId = new Map(
     loans.map((loan) => [
       loan.id,
-      { name: loan.customers.name, phone: loan.customers.phone },
+      {
+        name: loan.customers.name,
+        phone: loan.customers.phone,
+      },
     ]),
   );
 

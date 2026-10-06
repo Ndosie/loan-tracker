@@ -31,7 +31,7 @@ export const calculateCollections = (payments) => {
   ).toDateString();
 
   const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+  const diff = now.getDate() - day + (day === 0 ? -7 : 0);
 
   const startOfWeek = new Date(
     now.getFullYear(),
